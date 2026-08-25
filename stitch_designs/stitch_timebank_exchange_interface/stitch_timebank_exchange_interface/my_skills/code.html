@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Timebank - My Skills</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&amp;family=Inter:wght@400&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#bec6e0",
+                        "surface-container": "#152031",
+                        "inverse-primary": "#565e74",
+                        "primary-container": "#0f172a",
+                        "inverse-on-surface": "#263143",
+                        "primary-fixed-dim": "#bec6e0",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c6c6cd",
+                        "inverse-surface": "#d8e3fb",
+                        "on-error": "#690005",
+                        "background": "#081425",
+                        "surface-container-high": "#1f2a3c",
+                        "on-primary-container": "#798098",
+                        "tertiary": "#f9bd22",
+                        "on-primary-fixed": "#131b2e",
+                        "on-background": "#d8e3fb",
+                        "surface-dim": "#081425",
+                        "surface-container-low": "#111c2d",
+                        "surface-variant": "#2a3548",
+                        "on-tertiary-container": "#a47a00",
+                        "surface": "#081425",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#261a00",
+                        "surface-container-lowest": "#040e1f",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001f25",
+                        "on-secondary": "#00363e",
+                        "on-secondary-container": "#00515d",
+                        "secondary-fixed": "#a2eeff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "secondary-container": "#00cbe6",
+                        "tertiary-fixed-dim": "#f9bd22",
+                        "on-primary": "#283044",
+                        "surface-container-highest": "#2a3548",
+                        "tertiary-container": "#211600",
+                        "outline": "#909097",
+                        "surface-tint": "#bec6e0",
+                        "primary-fixed": "#dae2fd",
+                        "secondary": "#5de6ff",
+                        "outline-variant": "#45464d",
+                        "tertiary-fixed": "#ffdf9f",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "on-surface": "#d8e3fb",
+                        "on-tertiary": "#402d00",
+                        "surface-bright": "#2f3a4c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px",
+                        "gutter": "16px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "mono-data": ["Geist"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "mono-data": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2a3548; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f465c; }
+        
+        .glass-panel {
+            background-color: rgba(21, 32, 49, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glow-hover:hover {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden pt-16 pb-20 md:pb-0">
+<!-- TopAppBar (from JSON) -->
+<header class="fixed top-0 w-full z-50 bg-surface-container/40 backdrop-blur-lg dark:bg-surface-container-high/40 border-b border-white/10 shadow-[0_0_16px_rgba(190,198,224,0.1)] flex justify-between items-center px-margin-mobile h-16">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-lg-mobile text-headline-lg-mobile tracking-tighter font-bold text-primary dark:text-primary-fixed-dim">
+            TIMEBANK
+        </div>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow max-w-[1280px] w-full mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">My Offerings</h1>
+<p class="text-on-surface-variant mt-2 max-w-2xl">Manage your active services, track engagement, and adjust your availability in the network.</p>
+</div>
+<button class="bg-secondary text-on-secondary px-6 py-3 rounded-full font-label-caps text-label-caps glow-hover transition-all duration-300 hover:brightness-110 active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                ADD NEW SKILL
+            </button>
+</div>
+<!-- Analytics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat Card 1 -->
+<div class="glass-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-all duration-500"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Credits Earned</span>
+<span class="material-symbols-outlined text-secondary">token</span>
+</div>
+<div class="font-display-lg text-display-lg text-secondary">
+                    4,250
+                </div>
+<div class="mt-2 text-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
+                    +12% this month
+                </div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Active Services</span>
+<span class="material-symbols-outlined text-primary">work</span>
+</div>
+<div class="font-display-lg text-display-lg text-primary">
+                    3
+                </div>
+<div class="mt-2 text-sm text-on-surface-variant">
+                    Out of 5 permitted slots
+                </div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Times Requested</span>
+<span class="material-symbols-outlined text-tertiary">handshake</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface">
+                    128
+                </div>
+<div class="mt-2 text-sm text-on-surface-variant">
+                    Across all active offerings
+                </div>
+</div>
+</div>
+<!-- Skills List Area -->
+<div class="flex flex-col gap-4">
+<h2 class="font-headline-md text-headline-md text-on-surface border-b border-white/5 pb-2">Active Services</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+<!-- Skill Card 1 -->
+<div class="glass-panel rounded-xl p-1 flex flex-col group hover:border-secondary/30 transition-colors duration-300">
+<div class="p-5 flex flex-col h-full bg-surface-container/50 rounded-lg">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center opacity-50 mix-blend-screen" data-alt="Abstract holographic sphere glowing with cyan energy, floating in a dark minimalist space, representing advanced technology and digital architecture. High contrast, sharp details." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAa17lMcNhC3lNw66uqEctPjVnGDYRuEQNUNSI-Y2yEkOS9Bj9FyxtnkOB-LJhlWXpc3MLtRsTe1J-9Se9ODrleWou_McY8xJhinQPNkSNfYiAhRV5MBBOsASUdri3Y5eCuBGFEWJQ8uRrCBsA7z1c9vm9mVNVvzAqEhauK2ty0fQsl7vnOcT12gS9IB2y7gQ6ek4_gbrTff4ecS1G1LTnHuHQUJXQC4LT3stq6leFRu_jQ7ZULCtR7')"></div>
+<span class="material-symbols-outlined text-secondary relative z-10">code_blocks</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface text-lg">Smart Contract Auditing</h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Development &amp; Security</span>
+</div>
+</div>
+<!-- Custom Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"></div>
+</label>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex gap-6">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Requests</span>
+<span class="font-mono-data text-mono-data text-on-surface mt-1">84</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Earned</span>
+<span class="font-mono-data text-mono-data text-secondary mt-1 flex items-center gap-1"><span class="material-symbols-outlined" style="font-size: 12px;">token</span> 3,100</span>
+</div>
+</div>
+<button class="border border-white/10 text-on-surface px-4 py-2 rounded-full font-label-caps text-label-caps hover:bg-white/5 transition-colors active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+                                EDIT
+                            </button>
+</div>
+</div>
+</div>
+<!-- Skill Card 2 -->
+<div class="glass-panel rounded-xl p-1 flex flex-col group hover:border-secondary/30 transition-colors duration-300">
+<div class="p-5 flex flex-col h-full bg-surface-container/50 rounded-lg">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-screen" data-alt="Sleek geometric wireframe pattern in muted gold and dark navy, suggesting structured mentorship and architectural design. Smooth gradients, premium corporate aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAenArJaGesDxBypyKcyEoH-hs8FvHteXRqMO8TG_m-WHzwaRE3N9hhg3wU7rJ1ikMzlFBmPEBsZuWz8abqSM1KNfetnPlzw7R9Vd6CMpbu8oZNerD1Cmd3ABo0f7Yetq746G3C_8T_poVDRwQa14r6ABjSlNDJyv8Br17KoWrerEduHnNj3O1uH5GszMW_ZiOt-ZPi19FWD6896jXbaxDrUh6jvgyUraUJNkxEolKINmqs6SjTJSUm')"></div>
+<span class="material-symbols-outlined text-tertiary relative z-10">architecture</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface text-lg">UI/UX Mentorship</h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Design &amp; Strategy</span>
+</div>
+</div>
+<!-- Custom Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"></div>
+</label>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex gap-6">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Requests</span>
+<span class="font-mono-data text-mono-data text-on-surface mt-1">44</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Earned</span>
+<span class="font-mono-data text-mono-data text-secondary mt-1 flex items-center gap-1"><span class="material-symbols-outlined" style="font-size: 12px;">token</span> 1,150</span>
+</div>
+</div>
+<button class="border border-white/10 text-on-surface px-4 py-2 rounded-full font-label-caps text-label-caps hover:bg-white/5 transition-colors active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+                                EDIT
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (from JSON, Profile Active) -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container-low/60 border-t border-white/10 shadow-[0_-4px_24px_rgba(0,203,230,0.1)] flex justify-around items-center h-20 pb-safe px-4 md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span class="font-label-caps text-[10px]">Explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1">account_balance_wallet</span>
+<span class="font-label-caps text-[10px]">Vault</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1">account_balance</span>
+<span class="font-label-caps text-[10px]">Wallet</span>
+</button>
+<!-- Active Tab: Profile (closest semantic match for personal skill management) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim drop-shadow-[0_0_8px_rgba(93,230,255,0.5)] active:scale-90 transition-transform duration-200 relative">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-[10px]">Profile</span>
+<div class="absolute -bottom-2 w-1 h-1 bg-secondary rounded-full shadow-[0_0_4px_#5de6ff]"></div>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TIMEBANK - Service Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Inter:wght@400&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#bec6e0",
+                      "surface-container": "#152031",
+                      "inverse-primary": "#565e74",
+                      "primary-container": "#0f172a",
+                      "inverse-on-surface": "#263143",
+                      "primary-fixed-dim": "#bec6e0",
+                      "error": "#ffb4ab",
+                      "on-surface-variant": "#c6c6cd",
+                      "inverse-surface": "#d8e3fb",
+                      "on-error": "#690005",
+                      "background": "#081425",
+                      "surface-container-high": "#1f2a3c",
+                      "on-primary-container": "#798098",
+                      "tertiary": "#f9bd22",
+                      "on-primary-fixed": "#131b2e",
+                      "on-background": "#d8e3fb",
+                      "surface-dim": "#081425",
+                      "surface-container-low": "#111c2d",
+                      "surface-variant": "#2a3548",
+                      "on-tertiary-container": "#a47a00",
+                      "surface": "#081425",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed": "#261a00",
+                      "surface-container-lowest": "#040e1f",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#001f25",
+                      "on-secondary": "#00363e",
+                      "on-secondary-container": "#00515d",
+                      "secondary-fixed": "#a2eeff",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "secondary-fixed-dim": "#2fd9f4",
+                      "secondary-container": "#00cbe6",
+                      "tertiary-fixed-dim": "#f9bd22",
+                      "on-primary": "#283044",
+                      "surface-container-highest": "#2a3548",
+                      "tertiary-container": "#211600",
+                      "outline": "#909097",
+                      "surface-tint": "#bec6e0",
+                      "primary-fixed": "#dae2fd",
+                      "secondary": "#5de6ff",
+                      "outline-variant": "#45464d",
+                      "tertiary-fixed": "#ffdf9f",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-secondary-fixed-variant": "#004e5a",
+                      "on-surface": "#d8e3fb",
+                      "on-tertiary": "#402d00",
+                      "surface-bright": "#2f3a4c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-mobile": "20px",
+                      "container-max": "1280px",
+                      "gutter": "16px",
+                      "margin-desktop": "48px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "mono-data": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "mono-data": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+            border-color: rgba(93, 230, 255, 0.5);
+        }
+        .btn-primary-glow:hover {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.5);
+            filter: brightness(1.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-[100px] md:pb-0">
+<!-- Suppressed navigation shell for detailed task screen -->
+<!-- Header / Back Navigation -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/5 h-16 flex items-center px-margin-mobile">
+<a class="flex items-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mr-2" data-icon="arrow_back">arrow_back</span>
+<span class="font-label-caps text-label-caps">BACK TO EXPLORE</span>
+</a>
+</header>
+<main class="pt-16 max-w-container-max mx-auto md:px-margin-desktop">
+<!-- Cover Image Section -->
+<section class="relative w-full h-[353px] md:h-[442px] md:rounded-b-2xl overflow-hidden mb-8">
+<div class="bg-cover bg-center w-full h-full absolute inset-0" data-alt="A highly detailed, cinematic rendering of an advanced futuristic server room or data architecture environment. The scene is illuminated by glowing neon blue and cyan lights against deep space blacks, reflecting a modern futurism aesthetic. Complex geometric patterns and holographic displays suggest high-level data processing and architectural precision. The mood is sophisticated, technical, and premium." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZ23ZjAnt1G4674Mi308Dl9tABnsYsxtqy2e61Xophv71bPAfIBkg8KkGXW2ugJeQDRm8cIlC_Y087r7XrXFNWJquU-j3pOzrNZAqv7zfwxnw57OBt6zkqh3WnFMVgXkFaAttmdCqAyQi1jIy2edGZmRQgaoQ_IfzzSOhx91VWXvb1vRgHTL0pOV_T8_hw23UgaO-ezrx-EXPLethuBQBk6U7bCg4tItbkpL0AEgwyHoHbL9_KCIlF')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-margin-mobile md:p-8 flex flex-col justify-end">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary-container text-secondary font-label-caps text-label-caps px-3 py-1 rounded-full border border-secondary/20">SYSTEM ARCHITECTURE</span>
+<span class="flex items-center text-tertiary font-label-caps text-label-caps bg-surface-container/80 px-2 py-1 rounded-full backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+                        4.9 (124)
+                    </span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">Advanced Data Structuring &amp; Optimization</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Complete overhaul of backend databases for maximum efficiency and speed.</p>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 px-margin-mobile md:px-0">
+<!-- Left Column: Details -->
+<div class="lg:col-span-2 space-y-6">
+<!-- Provider Info Card -->
+<div class="glass-panel rounded-xl p-6 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A striking portrait of a sophisticated, visionary architect or tech expert in a dimly lit, high-tech environment. The lighting is dramatic, with soft cyan rim lights contrasting against a deep navy background. The subject exudes confidence and reliability, embodying premium utility. Modern, glass-like UI elements faintly reflect in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnuw-K-ObzNOlv2CQjNFuhu7srsYtz_mkKvo0OZpopxktu0rqh79XImuVjiUEfwvII3Cd2072nVPV3TPGqgif_yUj_IXXOEH2OaP5sbbJmgvBoFKvedCNSYomuVps3MsuSm0FR7zajIeITctLJ16aATDCBNAJS2Z_deXHNWRgQfNh7PGhdzbAgDw0nTelZ4Q0MZIyiibc7inF57D-ta6SOm8PdQ903xN01rZPnWfEIMBKeAzRPcj4f"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Dr. Elias Vance</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Level 5 Data Architect</p>
+</div>
+</div>
+<button class="bg-transparent border border-secondary text-secondary font-label-caps text-label-caps px-4 py-2 rounded-lg hover:bg-secondary/10 transition-colors">
+                        VIEW PROFILE
+                    </button>
+</div>
+<!-- Description -->
+<div class="glass-panel rounded-xl p-6">
+<h2 class="font-headline-md text-headline-md text-primary mb-4 border-b border-white/5 pb-2">Service Overview</h2>
+<div class="space-y-4 font-body-md text-body-md text-on-surface-variant">
+<p>This service provides a comprehensive architectural review and restructuring of your existing data pipelines. By utilizing advanced querying paradigms and modern indexing strategies, I ensure your systems run at optimal latency.</p>
+<p>Perfect for scale-ups experiencing bottlenecking during peak transactional periods. The process involves a 2-hour audit, followed by a detailed implementation roadmap.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Action & Summary -->
+<div class="space-y-6">
+<div class="glass-panel rounded-xl p-6 sticky top-24">
+<div class="flex justify-between items-baseline mb-6 border-b border-white/5 pb-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant">TIME REQUIRED</span>
+<span class="font-headline-md text-headline-md text-secondary">15 HRS</span>
+</div>
+<ul class="space-y-4 mb-8 font-mono-data text-mono-data text-on-surface-variant">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+                            Initial Audit (2 hrs)
+                        </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+                            Schema Redesign (8 hrs)
+                        </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+                            Migration Strategy (5 hrs)
+                        </li>
+</ul>
+<button class="w-full bg-secondary text-on-secondary font-label-caps text-label-caps py-4 rounded-lg btn-primary-glow transition-all duration-300 flex justify-center items-center gap-2">
+                        REQUEST SERVICE
+                        <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center font-label-caps text-label-caps text-on-surface-variant mt-4 opacity-70">Requires Escrow Approval</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

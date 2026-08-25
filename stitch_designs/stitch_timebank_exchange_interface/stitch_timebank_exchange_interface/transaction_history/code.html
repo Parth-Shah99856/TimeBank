@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transaction History - Timebank</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&amp;family=Inter:wght@400&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#bec6e0",
+                        "surface-container": "#152031",
+                        "inverse-primary": "#565e74",
+                        "primary-container": "#0f172a",
+                        "inverse-on-surface": "#263143",
+                        "primary-fixed-dim": "#bec6e0",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c6c6cd",
+                        "inverse-surface": "#d8e3fb",
+                        "on-error": "#690005",
+                        "background": "#081425",
+                        "surface-container-high": "#1f2a3c",
+                        "on-primary-container": "#798098",
+                        "tertiary": "#f9bd22",
+                        "on-primary-fixed": "#131b2e",
+                        "on-background": "#d8e3fb",
+                        "surface-dim": "#081425",
+                        "surface-container-low": "#111c2d",
+                        "surface-variant": "#2a3548",
+                        "on-tertiary-container": "#a47a00",
+                        "surface": "#081425",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#261a00",
+                        "surface-container-lowest": "#040e1f",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001f25",
+                        "on-secondary": "#00363e",
+                        "on-secondary-container": "#00515d",
+                        "secondary-fixed": "#a2eeff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "secondary-container": "#00cbe6",
+                        "tertiary-fixed-dim": "#f9bd22",
+                        "on-primary": "#283044",
+                        "surface-container-highest": "#2a3548",
+                        "tertiary-container": "#211600",
+                        "outline": "#909097",
+                        "surface-tint": "#bec6e0",
+                        "primary-fixed": "#dae2fd",
+                        "secondary": "#5de6ff",
+                        "outline-variant": "#45464d",
+                        "tertiary-fixed": "#ffdf9f",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "on-surface": "#d8e3fb",
+                        "on-tertiary": "#402d00",
+                        "surface-bright": "#2f3a4c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px",
+                        "gutter": "16px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "mono-data": ["Geist"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "mono-data": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(17, 28, 45, 0.4); /* surface-container-low */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-cyan-hover:hover {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pt-16 pb-24 md:pb-8">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 bg-surface-container/40 backdrop-blur-lg dark:bg-surface-container-high/40 shadow-[0_0_16px_rgba(190,198,224,0.1)] flex justify-between items-center px-margin-mobile h-16 md:px-margin-desktop">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center w-10 h-10 rounded-full md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Desktop Nav Links (Hidden on mobile) -->
+<nav class="hidden md:flex gap-8 items-center">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center w-10 h-10 rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Home</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Explore</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Vault</a>
+<a class="font-label-caps text-label-caps text-primary drop-shadow-[0_0_8px_rgba(93,230,255,0.5)]" href="#">Wallet</a>
+</nav>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg tracking-tighter font-bold text-primary dark:text-primary-fixed-dim mx-auto md:mx-0 absolute left-1/2 transform -translate-x-1/2 md:relative md:left-0 md:translate-x-0">TIMEBANK</h1>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center w-10 h-10 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<a class="hidden md:block font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">Profile</a>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 flex flex-col gap-8">
+<!-- Page Header & Summary Bento -->
+<section class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">Transaction History</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Your chronological ledger of temporal exchanges.</p>
+</div>
+<!-- Summary Card -->
+<div class="glass-card rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary opacity-10 rounded-full blur-2xl"></div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Net Time Balance</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary tracking-tight">124.5</span>
+<span class="font-mono-data text-mono-data text-secondary">HRS</span>
+</div>
+</div>
+<div class="flex gap-4 w-full md:w-auto z-10">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high border border-outline-variant hover:border-secondary/50 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">filter_list</span>
+<span class="font-label-caps text-label-caps text-on-surface">Filter</span>
+</button>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high border border-outline-variant hover:border-secondary/50 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
+<span class="font-label-caps text-label-caps text-on-surface">Export</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Transaction List -->
+<section class="flex flex-col gap-8">
+<!-- Date Group: Today -->
+<div class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant border-b border-white/5 pb-2">Today</h3>
+<div class="flex flex-col gap-3">
+<!-- Transaction Item: Earned -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between gap-4 glow-cyan-hover transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A striking portrait of a female software engineer in a futuristic, neon-lit minimalist workspace, shot with a shallow depth of field. High contrast lighting with subtle cyan highlights defining her silhouette. The aesthetic is clean, professional, and slightly cyberpunk." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDviA24rBAXwJ6wRLQh3loQHhygaAHd5SxBAFCx2yHlYPsIYKzZN0UlrerdVZgcEESoZcYxFSXY2nvuIti1vIhTxEF-ZR5BqsOYgEeCD8ZBfDMrUh6ZEEh3uC3SoYzvsLa_CMUBsi9mrm1EkPzjc0KzJguEZxl5f-ByzqOQjZrE8ZFgJmr4eSvLe9PhTHhe2oAg5grfrFBVB1bzi13I9-f2HzvjgF1GMrbXjFdAABwxf8a8Q6a8IIuZ"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-[16px] text-on-surface leading-tight">Elara Vance</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">Advanced React Consultation</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-mono-data text-mono-data text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                                +2.0h
+                            </span>
+<span class="font-label-caps text-[10px] text-on-surface-variant/60">14:30</span>
+</div>
+</div>
+<!-- Transaction Item: Spent -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between gap-4 transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male graphic designer working at a clean, dark-mode drafting table. The scene is illuminated by sleek, modern task lighting emphasizing pristine white and deep black tones. The mood is focused, serene, and technologically sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOPdGwklPl7JIv_uDNZQGEpWxLfZcsERb-jjMP_G38x3EYayT-6W3RoVR6wga3c5fNGVg5jMBNZtblhEtD5lDUEySfIIa_XMtXJjcR5K-m_KycBYlGMVAYWZhwY4RoLOAiujWSJHUWMjw0TWTs_22U7I3bKhHmHl3XGmyN5sZL6vv0NO6IbHJUJCvfWTAqdwDm0jefd53MQLGOZQvE-Wlyp5mugewEsetgR0PEt9oMaSYFnetShlYj"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-[16px] text-on-surface leading-tight">Julian Thorne</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">UI Asset Generation</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-mono-data text-mono-data text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                                -1.5h
+                            </span>
+<span class="font-label-caps text-[10px] text-on-surface-variant/60">09:15</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Date Group: Yesterday -->
+<div class="flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant border-b border-white/5 pb-2">Yesterday</h3>
+<div class="flex flex-col gap-3">
+<!-- Transaction Item: Earned -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between gap-4 glow-cyan-hover transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0 bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="An abstract, modern digital artwork showing a glowing, geometric shape representing a server node or database entity. Set against a deep space navy background with subtle light flares. Premium utility aesthetic, sharp edges, and clean composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbDXQTULafDBO-oNI-He-0OUoIoLnV0LedsoufIgq89IU8FSSewPkZV5gUPKVHEnXvaM5kAiXSukp9eaUTfh-xmDMeqRxO07nKaQhbgcDDeVNFYdEnIeVOZwCZkMHlG4HneJLbJ9jYwJNl815mg9WheP1ZoPwYIh0c0Vo6BQeO0XsfIpXAsrVfaZ2_j_MHQ4FBMeyTgLCjzIO0vwW8y8jLAjoiaIhZdEge_VnBUfiBsGtrcawvK5ux"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-[16px] text-on-surface leading-tight">System Node Alpha</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">Automated Maintenance Reward</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="font-mono-data text-mono-data text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                                +0.5h
+                            </span>
+<span class="font-label-caps text-[10px] text-on-surface-variant/60">23:00</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Load More Button -->
+<button class="mt-4 w-full md:w-auto self-center px-6 py-3 rounded-lg border border-secondary text-secondary font-label-caps text-label-caps hover:bg-secondary/10 transition-colors flex items-center justify-center gap-2">
+            Load Previous Period
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</main>
+<!-- BottomNavBar from JSON (Mobile Only) -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container-low/60 shadow-[0_-4px_24px_rgba(0,203,230,0.1)] flex justify-around items-center h-20 pb-safe px-4 md:hidden">
+<!-- Inactive: Home -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1 text-[24px]">home</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</button>
+<!-- Inactive: Explore -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1 text-[24px]">explore</span>
+<span class="font-label-caps text-[10px]">Explore</span>
+</button>
+<!-- Inactive: Vault -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1 text-[24px]">account_balance_wallet</span>
+<span class="font-label-caps text-[10px]">Vault</span>
+</button>
+<!-- Active: Wallet (Intent matched for Transaction History) -->
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim drop-shadow-[0_0_8px_rgba(93,230,255,0.5)] active:scale-90 transition-transform duration-200 relative">
+<span class="material-symbols-outlined mb-1 text-[24px]" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-label-caps text-[10px]">Wallet</span>
+<!-- Glowing dot indicator -->
+<div class="absolute -bottom-2 w-1 h-1 rounded-full bg-secondary shadow-[0_0_8px_rgba(93,230,255,1)]"></div>
+</button>
+<!-- Inactive: Profile -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1 text-[24px]">person</span>
+<span class="font-label-caps text-[10px]">Profile</span>
+</button>
+</nav>
+</body></html>

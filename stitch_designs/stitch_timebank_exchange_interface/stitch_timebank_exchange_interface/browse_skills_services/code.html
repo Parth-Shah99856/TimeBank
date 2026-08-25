@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TIMEBANK - Explore Services</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&amp;family=Inter:wght@400;500&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#bec6e0",
+                      "surface-container": "#152031",
+                      "inverse-primary": "#565e74",
+                      "primary-container": "#0f172a",
+                      "inverse-on-surface": "#263143",
+                      "primary-fixed-dim": "#bec6e0",
+                      "error": "#ffb4ab",
+                      "on-surface-variant": "#c6c6cd",
+                      "inverse-surface": "#d8e3fb",
+                      "on-error": "#690005",
+                      "background": "#081425",
+                      "surface-container-high": "#1f2a3c",
+                      "on-primary-container": "#798098",
+                      "tertiary": "#f9bd22",
+                      "on-primary-fixed": "#131b2e",
+                      "on-background": "#d8e3fb",
+                      "surface-dim": "#081425",
+                      "surface-container-low": "#111c2d",
+                      "surface-variant": "#2a3548",
+                      "on-tertiary-container": "#a47a00",
+                      "surface": "#081425",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed": "#261a00",
+                      "surface-container-lowest": "#040e1f",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#001f25",
+                      "on-secondary": "#00363e",
+                      "on-secondary-container": "#00515d",
+                      "secondary-fixed": "#a2eeff",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "secondary-fixed-dim": "#2fd9f4",
+                      "secondary-container": "#00cbe6",
+                      "tertiary-fixed-dim": "#f9bd22",
+                      "on-primary": "#283044",
+                      "surface-container-highest": "#2a3548",
+                      "tertiary-container": "#211600",
+                      "outline": "#909097",
+                      "surface-tint": "#bec6e0",
+                      "primary-fixed": "#dae2fd",
+                      "secondary": "#5de6ff",
+                      "outline-variant": "#45464d",
+                      "tertiary-fixed": "#ffdf9f",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-secondary-fixed-variant": "#004e5a",
+                      "on-surface": "#d8e3fb",
+                      "on-tertiary": "#402d00",
+                      "surface-bright": "#2f3a4c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-mobile": "20px",
+                      "container-max": "1280px",
+                      "gutter": "16px",
+                      "margin-desktop": "48px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "mono-data": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "mono-data": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #081425; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a3548; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #45464d; 
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glow-hover:hover {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+            border-color: rgba(93, 230, 255, 0.3);
+        }
+        
+        .cyan-glow {
+            box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+        }
+        
+        .premium-card-bg {
+            background: linear-gradient(145deg, rgba(31, 42, 60, 0.4) 0%, rgba(17, 28, 45, 0.2) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden selection:bg-secondary selection:text-on-secondary">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 z-[-1] pointer-events-none opacity-40">
+<div class="absolute top-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-secondary/5 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[60vw] h-[60vw] rounded-full bg-primary/5 blur-[150px]"></div>
+</div>
+<!-- TopAppBar (From JSON) -->
+<header class="bg-surface-container/40 backdrop-blur-lg dark:bg-surface-container-high/40 fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_0_16px_rgba(190,198,224,0.1)] flex justify-between items-center px-margin-mobile h-16 hidden md:flex">
+<div class="flex items-center gap-4 text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile tracking-tighter font-bold text-primary dark:text-primary-fixed-dim">TIMEBANK</h1>
+<div class="flex items-center gap-4 text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-16 pb-24 md:pt-24 md:pb-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto min-h-screen flex flex-col gap-8">
+<!-- Page Header & Search -->
+<section class="flex flex-col gap-6 w-full animate-[fadeIn_0.5s_ease-out]">
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg text-primary-fixed-dim">Explore Services</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Discover and connect with community members offering high-value skills in exchange for time credits.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-4 w-full">
+<!-- Search Input -->
+<div class="relative flex-1 group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-secondary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full bg-surface-container-high/50 border-b-2 border-surface-variant focus:border-secondary focus:ring-0 focus:outline-none pl-12 pr-4 py-4 rounded-t-lg text-on-background font-body-md placeholder:text-on-surface-variant/50 transition-colors glass-panel" placeholder="Search skills, services, or members..." type="text"/>
+</div>
+<!-- Filter Button -->
+<button class="glass-panel px-6 py-4 rounded-lg flex items-center justify-center gap-2 text-primary hover:text-secondary hover:border-secondary/50 transition-colors shrink-0">
+<span class="material-symbols-outlined">tune</span>
+<span class="font-label-caps text-label-caps uppercase">Filters</span>
+</button>
+</div>
+<!-- Quick Filter Chips -->
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
+<button class="snap-start whitespace-nowrap px-4 py-2 rounded-full bg-secondary text-on-secondary font-label-caps text-label-caps uppercase transition-transform active:scale-95">All</button>
+<button class="snap-start whitespace-nowrap px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-label-caps text-label-caps uppercase transition-colors">Development</button>
+<button class="snap-start whitespace-nowrap px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-label-caps text-label-caps uppercase transition-colors">Design</button>
+<button class="snap-start whitespace-nowrap px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-label-caps text-label-caps uppercase transition-colors">Copywriting</button>
+<button class="snap-start whitespace-nowrap px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:bg-surface-container-high font-label-caps text-label-caps uppercase transition-colors">Consulting</button>
+</div>
+</section>
+<!-- Services Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+<!-- Service Card 1 (Premium/Recommended) -->
+<article class="glass-panel premium-card-bg rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group cursor-pointer border-secondary/30 cyan-glow transition-all duration-300 hover:-translate-y-1">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-[40px] -mr-10 -mt-10 pointer-events-none"></div>
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary/50">
+<img class="w-full h-full object-cover" data-alt="A futuristic, high-contrast portrait of a female software engineer in a dark tech environment. Soft blue rim lighting highlights her features against a deep obsidian background. She is wearing sleek, modern dark clothing. The aesthetic is premium utility and glassmorphism, evoking a sense of advanced digital expertise and visionary architecture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSqhfOkEglTVZp9k-6iTs-Zb5Frg0T2LE_MK0o-WmibhMWUc0izLWcKg0y-ekncDHjrNkxCffmspn_bam_8maX64RyLLeALTt6gwjFd6hKPCRyXFq_xNqi4a3JU3ciYhdJEZL3RuHqAVx2hVdYbFkJP7GqaP6KE4LVKGRC81vGFla-WvoHUkgATZLZU_GX6KxpKS7K3NJDB4RRZziMqHHJZvMR1k0M7ZwjwiPbhyDboiPnzEAHC8tJ"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary-fixed-dim group-hover:text-secondary transition-colors">Elena R.</h3>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-mono-data text-mono-data">4.9</span>
+</div>
+</div>
+</div>
+<div class="bg-secondary/10 text-secondary border border-secondary/20 px-2 py-1 rounded font-label-caps text-label-caps uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+                        Recommended
+                    </div>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-headline-md text-headline-md text-on-background">Advanced React Architecture</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Complete frontend architecture review, performance optimization, and scalable component design patterns for modern web apps.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">React</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">TypeScript</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">Next.js</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-primary">150</span>
+<span class="font-mono-data text-mono-data text-primary/70">TC/hr</span>
+</div>
+</div>
+<button class="bg-transparent border border-secondary text-secondary hover:bg-secondary/10 px-4 py-2 rounded transition-colors font-label-caps text-label-caps uppercase">Book Time</button>
+</div>
+</article>
+<!-- Service Card 2 -->
+<article class="glass-panel rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group cursor-pointer glow-hover transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male UI/UX designer in his late 30s, illuminated by a glowing monitor screen in a dim, minimalist studio. He wears thin-rimmed glasses and a dark turtleneck. The overall color palette features deep navy blues and stark whites, conveying a sense of precise, premium utility and modern futurism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCohIwvOh7hNCpJpKQaoDNjaUsQrKEgYK5_y5z3qacW7btlYUa3peFDIRffBD_jNmPLBC7Ez39DCc8M3-_JG33XySCsHXYPRLMLRf8utDiZkL7jlLwKmCUIqPOqOGkUiKQCKxmTY7aRWzC9F_XBecbYNlRn26dKYFH_kJ-7p3MJjxI9ZzamuMe6rKW-xKV1fLEuKx70gO-LW8IFZeP0rY-TAPWkxVxXKt8MDQ9caURAXPad_jvNRAxy"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary-fixed-dim group-hover:text-secondary transition-colors">Marcus T.</h3>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-mono-data text-mono-data">4.7</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-headline-md text-headline-md text-on-background">Strategic Copywriting</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">High-conversion landing page copy and brand voice development tailored for deep-tech and finance startups.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">Copywriting</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">Branding</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-primary">95</span>
+<span class="font-mono-data text-mono-data text-primary/70">TC/hr</span>
+</div>
+</div>
+<button class="bg-transparent border border-outline text-primary hover:border-secondary hover:text-secondary px-4 py-2 rounded transition-colors font-label-caps text-label-caps uppercase">Book Time</button>
+</div>
+</article>
+<!-- Service Card 3 -->
+<article class="glass-panel rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden group cursor-pointer glow-hover transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="Close up profile of a young female data scientist analyzing complex holographic charts. The setting is dark and moody, punctuated by sharp chrono cyan highlights reflecting on her face. Her demeanor is focused and architect-like, embodying the concept of high-value technical transaction in a modern futuristic setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArsz9wSOxeZiaMbY4oznVuwEmLifEzKk3cSUiT0PwagMc94aIIKDpyJeXli_YNTb41VQG9rRvW4Pa6bZzUM0JYsi4PAkNinuurpL4_lBx7HrAPGjWVbfS3s9aXISD8S8htJzThcvFbXQ0uxxp4abRP3XPK0ZUt7t1blWsXHU9VmBxYeWXeqnQ7kgyVFVDcVIsAseS1FYV5X6AVRzHXPG_v-bxp_IwNK3hByX_rhAssmARVatnEgmsL"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary-fixed-dim group-hover:text-secondary transition-colors">Sarah K.</h3>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-mono-data text-mono-data">5.0</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<h4 class="font-headline-md text-headline-md text-on-background">Data Pipeline Automation</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Custom Python scripts and cloud architecture to automate complex data extraction and processing workflows.</p>
+</div>
+<div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/5">
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">Python</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">AWS</span>
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant font-mono-data text-mono-data text-xs">Data Eng</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Rate</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md text-primary">120</span>
+<span class="font-mono-data text-mono-data text-primary/70">TC/hr</span>
+</div>
+</div>
+<button class="bg-transparent border border-outline text-primary hover:border-secondary hover:text-secondary px-4 py-2 rounded transition-colors font-label-caps text-label-caps uppercase">Book Time</button>
+</div>
+</article>
+</section>
+<!-- Load More -->
+<div class="w-full flex justify-center mt-4">
+<button class="bg-surface-container-high hover:bg-surface-variant text-primary font-label-caps text-label-caps uppercase px-8 py-3 rounded-full border border-white/5 transition-colors flex items-center gap-2">
+                Load More Services
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (From JSON) -->
+<nav class="bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container-low/60 fixed bottom-0 w-full z-50 rounded-t-xl border-t border-white/10 shadow-[0_-4px_24px_rgba(0,203,230,0.1)] flex justify-around items-center h-20 pb-safe px-4 md:hidden">
+<!-- Inactive Tab -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</div>
+<!-- Active Tab -->
+<div class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim drop-shadow-[0_0_8px_rgba(93,230,255,0.5)] active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-caps text-label-caps mt-1">Explore</span>
+</div>
+<!-- Inactive Tab -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps mt-1">Vault</span>
+</div>
+<!-- Inactive Tab -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_balance</span>
+<span class="font-label-caps text-label-caps mt-1">Wallet</span>
+</div>
+<!-- Inactive Tab -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-secondary/80 transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</div>
+</nav>
+</body></html>
