@@ -68,6 +68,46 @@ class ServiceRequestCompletionTest extends TestCase
         $this->assertNotEmpty($transaction->transaction_code);
     }
 
+    public function test_requester_can_complete_an_in_progress_service_request_with_json_response(): void
+    {
+        $requester = User::factory()->create(['time_balance' => '8.00']);
+        $provider = User::factory()->create(['time_balance' => '2.00']);
+        $category = Category::query()->create([
+            'name' => 'Design',
+            'slug' => 'design-json',
+            'description' => null,
+            'icon' => null,
+            'is_active' => true,
+        ]);
+        $service = Service::query()->create([
+            'user_id' => $provider->id,
+            'category_id' => $category->id,
+            'title' => 'Logo review',
+            'description' => 'Review a logo concept',
+            'hourly_rate' => '2.00',
+            'tags' => ['branding'],
+            'is_active' => true,
+        ]);
+        $serviceRequest = ServiceRequest::query()->create([
+            'service_id' => $service->id,
+            'requester_id' => $requester->id,
+            'provider_id' => $provider->id,
+            'category_id' => $category->id,
+            'title' => 'Need logo feedback',
+            'project_scope' => 'Review existing draft and provide feedback',
+            'estimated_hours' => '2.00',
+            'total_credits' => '4.00',
+            'desired_deadline' => now()->addWeek()->toDateString(),
+            'status' => 'in_progress',
+        ]);
+
+        $response = $this->actingAs($requester)->postJson(route('service-requests.complete', $serviceRequest));
+
+        $response->assertOk();
+        $response->assertJsonPath('status', 'completed');
+        $this->assertSame('completed', $serviceRequest->fresh()->status);
+    }
+
     public function test_double_completion_is_prevented_after_successful_transfer(): void
     {
         $requester = User::factory()->create(['time_balance' => '8.00']);

@@ -8,6 +8,7 @@ use App\Models\Idea;
 use App\Models\IdeaCollaborator;
 use App\Services\IdeaCollaboratorService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class IdeaCollaboratorController extends Controller
@@ -16,19 +17,27 @@ class IdeaCollaboratorController extends Controller
         StoreIdeaCollaboratorRequest $request,
         Idea $idea,
         IdeaCollaboratorService $ideaCollaboratorService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $collaborator = $ideaCollaboratorService->apply($idea, $request->user(), $request->validated());
 
-        return response()->json($collaborator, Response::HTTP_CREATED);
+        if ($request->expectsJson()) {
+            return response()->json($collaborator, Response::HTTP_CREATED);
+        }
+
+        return redirect()->route('ideas.show', $idea)->with('status', 'Application submitted to project lead successfully.');
     }
 
     public function update(
         UpdateIdeaCollaboratorStatusRequest $request,
         IdeaCollaborator $ideaCollaborator,
         IdeaCollaboratorService $ideaCollaboratorService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $updatedCollaborator = $ideaCollaboratorService->updateStatus($ideaCollaborator, $request->validated('status'));
 
-        return response()->json($updatedCollaborator);
+        if ($request->expectsJson()) {
+            return response()->json($updatedCollaborator);
+        }
+
+        return redirect()->route('ideas.show', $ideaCollaborator->idea_id)->with('status', 'Collaborator application status updated.');
     }
 }

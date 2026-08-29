@@ -22,6 +22,17 @@ class ServiceRequestLifecycleTest extends TestCase
         $this->assertSame('accepted', $serviceRequest->fresh()->status);
     }
 
+    public function test_provider_can_accept_a_pending_request_with_json_response(): void
+    {
+        [, $provider, $serviceRequest] = $this->makeServiceRequest('pending');
+
+        $response = $this->actingAs($provider)->postJson(route('service-requests.accept', $serviceRequest));
+
+        $response->assertOk();
+        $response->assertJsonPath('status', 'accepted');
+        $this->assertSame('accepted', $serviceRequest->fresh()->status);
+    }
+
     public function test_only_provider_can_accept_a_pending_request(): void
     {
         [$requester, $provider, $serviceRequest] = $this->makeServiceRequest('pending');

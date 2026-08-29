@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\ProjectMember;
 use App\Services\ProjectMemberService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class ProjectMemberController extends Controller
@@ -17,20 +18,28 @@ class ProjectMemberController extends Controller
         StoreProjectMemberRequest $request,
         Project $project,
         ProjectMemberService $projectMemberService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $member = $projectMemberService->addMember($project, $request->validated());
 
-        return response()->json($member, Response::HTTP_CREATED);
+        if ($request->expectsJson()) {
+            return response()->json($member, Response::HTTP_CREATED);
+        }
+
+        return redirect()->route('projects.show', $project)->with('status', 'Project contributor added successfully.');
     }
 
     public function update(
         UpdateProjectMemberRequest $request,
         ProjectMember $projectMember,
         ProjectMemberService $projectMemberService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $member = $projectMemberService->updateMemberRole($projectMember, $request->validated());
 
-        return response()->json($member);
+        if ($request->expectsJson()) {
+            return response()->json($member);
+        }
+
+        return redirect()->route('projects.show', $projectMember->project_id)->with('status', 'Member role updated successfully.');
     }
 
     public function destroy(

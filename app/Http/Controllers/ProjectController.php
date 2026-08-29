@@ -8,7 +8,10 @@ use App\Models\Idea;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
@@ -16,14 +19,24 @@ class ProjectController extends Controller
         ConvertIdeaToProjectRequest $request,
         Idea $idea,
         ProjectService $projectService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $project = $projectService->convertFromIdea($idea, $request->user());
 
-        return response()->json($project->load(['members.user', 'tasks']), Response::HTTP_CREATED);
+        if ($request->expectsJson()) {
+            return response()->json($project->load(['members.user', 'tasks']), Response::HTTP_CREATED);
+        }
+
+        return redirect()->route('projects.show', $project)->with('status', 'Initiative converted to active project successfully.');
     }
 
-    public function show(ViewProjectRequest $request, Project $project): JsonResponse
+    public function show(ViewProjectRequest $request, Project $project): JsonResponse|View
     {
-        return response()->json($project->load(['idea', 'leadUser', 'members.user', 'tasks.assignee']));
+        $project->load(['idea', 'leadUser', 'members.user', 'tasks.assignee']);
+
+        if ($request->expectsJson()) {
+            return response()->json($project);
+        }
+
+        return view('projects.show', ['project' => $project]);
     }
 }

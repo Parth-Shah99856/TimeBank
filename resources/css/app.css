@@ -1,3 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Geist:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ========================================
+   Stitch TIMEBANK Design System
+   ======================================== */
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+.material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #081425;
+        color: #d8e3fb;
+    }
+
+    body {
+        @apply bg-background text-on-background antialiased font-sans;
+        min-height: 100vh;
+    }
+
+    /* Custom Scrollbar for Stitch Dark Theme */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #081425;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #2a3548;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3f465c;
+    }
+}
+
+@layer components {
+    /* ---- Stitch Glass Cards & Panels ---- */
+    .glass-card {
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+    }
+
+    .glass-panel {
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glow-hover {
+        transition: all 0.3s ease;
+    }
+    .glow-hover:hover {
+        box-shadow: 0 0 16px rgba(93, 230, 255, 0.2);
+        border-color: rgba(93, 230, 255, 0.3);
+    }
+
+    .glow-active {
+        box-shadow: 0 0 16px rgba(93, 230, 255, 0.3);
+    }
+
+    /* ---- Stitch Label & Typography Tokens ---- */
+    .font-label-caps {
+        font-family: 'Geist', sans-serif;
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .font-mono-data {
+        font-family: 'Geist', monospace;
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    .font-display-lg {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 48px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        font-weight: 700;
+    }
+
+    .font-headline-lg {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        font-weight: 700;
+    }
+
+    .font-headline-md {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 20px;
+        line-height: 1.3;
+        font-weight: 600;
+    }
+
+    .font-body-md {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        font-weight: 400;
+    }
+
+    .font-body-lg {
+        font-family: 'Inter', sans-serif;
+        font-size: 18px;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    /* ---- Stitch Button Styles ---- */
+    .btn-stitch-primary {
+        @apply bg-secondary text-on-secondary font-label-caps px-6 py-3 rounded-lg
+               hover:brightness-110 hover:shadow-[0_0_16px_rgba(93,230,255,0.35)]
+               transition-all duration-200 active:scale-95 inline-flex items-center justify-center gap-2
+               cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-stitch-secondary {
+        @apply border border-secondary/50 text-secondary font-label-caps px-6 py-3 rounded-lg
+               hover:bg-secondary/10 transition-all duration-200 active:scale-95
+               inline-flex items-center justify-center gap-2 cursor-pointer
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-stitch-ghost {
+        @apply text-on-surface-variant hover:text-secondary font-label-caps px-4 py-2 rounded-lg
+               hover:bg-white/5 transition-all duration-200 inline-flex items-center justify-center gap-2;
+    }
+
+    .btn-stitch-danger {
+        @apply bg-error-container text-on-error-container border border-error/30 font-label-caps px-4 py-2.5 rounded-lg
+               hover:bg-error/20 hover:border-error/60 transition-all duration-200 inline-flex items-center justify-center gap-2;
+    }
+
+    /* ---- Stitch Form Inputs ---- */
+    .stitch-input {
+        @apply w-full bg-surface-container-low border border-white/10 rounded-lg px-4 py-3 text-on-surface
+               text-sm font-sans placeholder:text-on-surface-variant/40 focus:outline-none focus:border-secondary/60
+               focus:ring-1 focus:ring-secondary/50 transition-all duration-200;
+    }
+
+    .stitch-select {
+        @apply stitch-input appearance-none bg-no-repeat bg-right pr-10;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23bec6e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+        background-size: 1.5em 1.5em;
+        background-position: right 0.75rem center;
+    }
+
+    .stitch-textarea {
+        @apply stitch-input resize-y min-h-[120px];
+    }
+
+    .stitch-label {
+        @apply block font-label-caps text-on-surface-variant mb-2;
+    }
+
+    /* ---- Stitch Badge / Tags ---- */
+    .stitch-badge {
+        @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-label-caps border;
+    }
+    .stitch-badge-cyan {
+        @apply bg-secondary/10 text-secondary border-secondary/30;
+    }
+    .stitch-badge-gold {
+        @apply bg-tertiary/10 text-tertiary border-tertiary/30;
+    }
+    .stitch-badge-green {
+        @apply bg-emerald-500/10 text-emerald-300 border-emerald-500/30;
+    }
+    .stitch-badge-red {
+        @apply bg-red-500/10 text-red-300 border-red-500/30;
+    }
+    .stitch-badge-neutral {
+        @apply bg-surface-container-high text-on-surface-variant border-white/10;
+    }
+
+    /* ---- Stitch Modal Overlay ---- */
+    .stitch-overlay {
+        @apply fixed inset-0 bg-background/80 backdrop-blur-md z-50 flex items-center justify-center p-4;
+    }
+    .stitch-modal {
+        @apply glass-card p-6 md:p-8 max-w-lg w-full rounded-2xl shadow-2xl border border-white/15 relative z-50;
+    }
+}

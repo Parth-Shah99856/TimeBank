@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\ProjectTask;
 use App\Services\ProjectTaskService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 
 class ProjectTaskController extends Controller
@@ -17,20 +18,28 @@ class ProjectTaskController extends Controller
         StoreProjectTaskRequest $request,
         Project $project,
         ProjectTaskService $projectTaskService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $task = $projectTaskService->createTask($project, $request->validated());
 
-        return response()->json($task, Response::HTTP_CREATED);
+        if ($request->expectsJson()) {
+            return response()->json($task, Response::HTTP_CREATED);
+        }
+
+        return redirect()->route('projects.show', $project)->with('status', 'Project task added successfully.');
     }
 
     public function update(
         UpdateProjectTaskRequest $request,
         ProjectTask $projectTask,
         ProjectTaskService $projectTaskService,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $task = $projectTaskService->updateTask($projectTask, $request->validated());
 
-        return response()->json($task);
+        if ($request->expectsJson()) {
+            return response()->json($task);
+        }
+
+        return redirect()->route('projects.show', $projectTask->project_id)->with('status', 'Task updated successfully.');
     }
 
     public function destroy(

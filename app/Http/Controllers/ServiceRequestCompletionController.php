@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompleteServiceRequestRequest;
 use App\Models\ServiceRequest;
 use App\Services\ServiceRequestCompletionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 class ServiceRequestCompletionController extends Controller
@@ -13,8 +14,12 @@ class ServiceRequestCompletionController extends Controller
         CompleteServiceRequestRequest $request,
         ServiceRequest $serviceRequest,
         ServiceRequestCompletionService $completionService,
-    ): RedirectResponse {
+    ): JsonResponse|RedirectResponse {
         $completionService->complete($serviceRequest, $request->user());
+
+        if ($request->expectsJson()) {
+            return response()->json($serviceRequest->fresh());
+        }
 
         return redirect()->route('dashboard')->with('status', 'service-request-completed');
     }

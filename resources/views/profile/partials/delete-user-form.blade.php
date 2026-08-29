@@ -1,55 +1,47 @@
-<section class="space-y-6">
+<section class="space-y-6" x-data="{ confirmingUserDeletion: false }">
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Delete Account') }}
+        <h2 class="font-headline-md text-lg font-bold text-error">
+            Deactivate Temporal Node
         </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+        <p class="font-body-md text-xs text-on-surface-variant mt-1">
+            Once your node is decommissioned, all accrued time credits and transactional histories will be permanently unlinked.
         </p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    <button type="button" @click="confirmingUserDeletion = true" class="btn-stitch-danger text-xs py-2.5 px-4">
+        DECOMMISSION NODE
+    </button>
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
-            @csrf
-            @method('delete')
+    {{-- Confirmation Modal --}}
+    <div x-show="confirmingUserDeletion" class="stitch-overlay" style="display: none;" @click.self="confirmingUserDeletion = false">
+        <div class="stitch-modal animate-fade-in-up border-error/40">
+            <form method="post" action="{{ route('profile.destroy') }}">
+                @csrf
+                @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
-            </h2>
+                <h2 class="font-headline-md text-lg font-bold text-on-surface mb-2">
+                    Are you sure you want to decommission your node?
+                </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </p>
+                <p class="font-body-md text-xs text-on-surface-variant mb-6">
+                    Please enter your cryptographic key to authorize permanent removal of your account and temporal ledger.
+                </p>
 
-            <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+                <div class="mb-6">
+                    <label for="password" class="stitch-label">CRYPTOGRAPHIC KEY</label>
+                    <input id="password" name="password" type="password" class="stitch-input" placeholder="••••••••••••" />
+                    <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-1 text-xs text-error font-mono-data" />
+                </div>
 
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
-
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
-            </div>
-        </form>
-    </x-modal>
+                <div class="flex justify-end gap-3">
+                    <button type="button" @click="confirmingUserDeletion = false" class="btn-stitch-secondary text-xs">
+                        CANCEL
+                    </button>
+                    <button type="submit" class="btn-stitch-danger text-xs">
+                        CONFIRM DECOMMISSION
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
