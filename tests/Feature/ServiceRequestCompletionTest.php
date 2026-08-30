@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\ServiceRequest;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\SkillExchangeOtpService;
 use LogicException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -48,7 +49,11 @@ class ServiceRequestCompletionTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $response = $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+        $otp = app(SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
+        $response = $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+            'otp' => $otp,
+        ]);
 
         $response->assertRedirect(route('dashboard', absolute: false));
         $requester->refresh();
@@ -101,7 +106,11 @@ class ServiceRequestCompletionTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $response = $this->actingAs($requester)->postJson(route('service-requests.complete', $serviceRequest));
+        $otp = app(SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
+        $response = $this->actingAs($requester)->postJson(route('service-requests.complete', $serviceRequest), [
+            'otp' => $otp,
+        ]);
 
         $response->assertOk();
         $response->assertJsonPath('status', 'completed');
@@ -132,15 +141,21 @@ class ServiceRequestCompletionTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+        $otp = app(SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
+        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+            'otp' => $otp,
+        ]);
 
         $this->withoutExceptionHandling();
 
         try {
-            $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+            $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+                'otp' => $otp,
+            ]);
             $this->fail('Expected double completion exception was not thrown.');
-        } catch (\RuntimeException $exception) {
-            $this->assertSame('Only in-progress service requests can be completed.', $exception->getMessage());
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            $this->assertArrayHasKey('otp', $exception->errors());
         }
 
         $requester->refresh();
@@ -177,7 +192,11 @@ class ServiceRequestCompletionTest extends TestCase
             'status' => 'in_progress',
         ]);
 
-        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+        $otp = app(SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
+        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+            'otp' => $otp,
+        ]);
 
         $transaction = Transaction::query()->where('service_request_id', $serviceRequest->id)->firstOrFail();
 
@@ -246,10 +265,14 @@ class ServiceRequestCompletionTest extends TestCase
             'status' => 'in_progress',
         ]);
 
+        $otp = app(SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
         $this->withoutExceptionHandling();
 
         try {
-            $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+            $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+                'otp' => $otp,
+            ]);
             $this->fail('Expected insufficient balance exception was not thrown.');
         } catch (\RuntimeException $exception) {
             $this->assertSame('Insufficient time balance to complete this exchange.', $exception->getMessage());

@@ -62,4 +62,9 @@ class ServiceRequest extends Model
     {
         return $this->hasOne(Review::class);
     }
+
+    public function otps(): HasMany
+    {
+        return $this->hasMany(ServiceRequestOtp::class);
+    }
 }

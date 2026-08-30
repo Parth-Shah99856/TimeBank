@@ -58,7 +58,11 @@ class NotificationWorkflowTest extends TestCase
     {
         [$serviceRequest, $requester, $provider] = $this->makeServiceRequest('in_progress', '4.00', '8.00');
 
-        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest));
+        $otp = app(\App\Services\SkillExchangeOtpService::class)->generateAndSend($serviceRequest, $requester);
+
+        $this->actingAs($requester)->post(route('service-requests.complete', $serviceRequest), [
+            'otp' => $otp,
+        ]);
 
         $notification = $provider->fresh()->notifications()->first();
 

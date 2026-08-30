@@ -16,7 +16,54 @@
         $receivedRequests = Auth::user()->providedServiceRequests()->with(['service', 'requester', 'review'])->latest()->get();
     @endphp
 
-    <div x-data="{ tab: 'sent', reviewModal: false, activeRequestId: null }" class="space-y-6">
+    <div x-data="{
+        tab: 'sent',
+        reviewModal: false,
+        otpModal: false,
+        activeRequestId: null,
+        activeRequestTitle: '',
+        activeCredits: '0.00',
+        activeProviderName: '',
+        otpSending: false,
+        otpSent: false,
+        otpCode: '',
+        otpError: '',
+        openOtpModal(id, title, credits, provider) {
+            this.activeRequestId = id;
+            this.activeRequestTitle = title;
+            this.activeCredits = credits;
+            this.activeProviderName = provider;
+            this.otpSent = false;
+            this.otpCode = '';
+            this.otpError = '';
+            this.otpModal = true;
+            this.sendOtp();
+        },
+        async sendOtp() {
+            this.otpSending = true;
+            this.otpError = '';
+            try {
+                const res = await fetch(`/service-requests/${this.activeRequestId}/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.otpSent = true;
+                } else {
+                    this.otpError = data.message || 'Failed to dispatch verification code.';
+                }
+            } catch (e) {
+                this.otpError = 'Network communication failure while sending code.';
+            } finally {
+                this.otpSending = false;
+            }
+        }
+    }" class="space-y-6">
         {{-- Tabs Header --}}
         <div class="flex gap-4 border-b border-white/10 pb-4">
             <button @click="tab = 'sent'"
@@ -82,12 +129,12 @@
                                     </button>
                                 </form>
                             @elseif($req->status === 'in_progress')
-                                <form method="POST" action="{{ route('service-requests.complete', $req->id) }}" onsubmit="return confirm('Confirm completion and release escrow credits?')">
-                                    @csrf
-                                    <button type="submit" class="btn-stitch-primary text-xs py-1.5 px-3">
-                                        Confirm Completion
-                                    </button>
-                                </form>
+                                <button type="button"
+                                        @click="openOtpModal({{ $req->id }}, '{{ addslashes($req->service->title ?? $req->title) }}', '{{ number_format($req->total_credits ?? $req->estimated_hours ?? 0, 2) }}', '{{ addslashes($req->provider->name) }}')"
+                                        class="btn-stitch-primary text-xs py-1.5 px-3 flex items-center gap-1.5 shadow-[0_0_10px_rgba(93,230,255,0.25)]">
+                                    <span class="material-symbols-outlined text-[15px]">verified_user</span>
+                                    Confirm Completion
+                                </button>
                                 <form method="POST" action="{{ route('service-requests.dispute', $req->id) }}" onsubmit="return confirm('Flag this exchange as disputed for admin review?')">
                                     @csrf
                                     <button type="submit" class="btn-stitch-danger text-xs py-1.5 px-3">
@@ -229,6 +276,100 @@
                     <div class="flex justify-end gap-3">
                         <button type="button" @click="reviewModal = false" class="btn-stitch-secondary text-xs">CANCEL</button>
                         <button type="submit" class="btn-stitch-primary text-xs shadow-[0_0_12px_rgba(93,230,255,0.3)]">SUBMIT REVIEW</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- OTP Confirmation Modal --}}
+        <div x-show="otpModal" class="stitch-overlay" style="display: none;" @click.self="otpModal = false" x-cloak>
+            <div class="stitch-modal animate-fade-in-up max-w-md">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
+                            <span class="material-symbols-outlined text-[18px]">lock_reset</span>
+                        </div>
+                        <div>
+                            <h3 class="font-headline-md text-base font-bold text-on-surface">Confirm Skill Exchange</h3>
+                            <p class="font-mono-data text-[11px] text-on-surface-variant">Two-Factor Settlement Verification</p>
+                        </div>
+                    </div>
+                    <button @click="otpModal = false" class="text-on-surface-variant hover:text-white">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+
+                {{-- Exchange Context Card --}}
+                <div class="p-3.5 rounded-lg bg-surface-container/60 border border-white/10 mb-5 space-y-1.5 font-mono-data text-xs">
+                    <div class="flex justify-between text-on-surface-variant">
+                        <span>Initiative / Skill:</span>
+                        <span class="text-on-surface font-semibold max-w-[200px] truncate" x-text="activeRequestTitle"></span>
+                    </div>
+                    <div class="flex justify-between text-on-surface-variant">
+                        <span>Provider:</span>
+                        <span class="text-primary font-semibold" x-text="activeProviderName"></span>
+                    </div>
+                    <div class="flex justify-between text-on-surface-variant pt-1 border-t border-white/5">
+                        <span>Temporal Transfer:</span>
+                        <span class="text-secondary font-bold text-sm" x-text="activeCredits + ' TC'"></span>
+                    </div>
+                </div>
+
+                {{-- Status Alerts --}}
+                <div x-show="otpSending" class="p-3 rounded-lg bg-secondary/10 border border-secondary/30 mb-4 flex items-center gap-2 text-xs font-mono-data text-secondary">
+                    <span class="material-symbols-outlined animate-spin text-[16px]">sync</span>
+                    Dispatching 6-digit authorization code to your email...
+                </div>
+
+                <div x-show="otpSent && !otpSending" class="p-3 rounded-lg bg-tertiary/10 border border-tertiary/30 mb-4 flex items-center gap-2 text-xs font-mono-data text-tertiary">
+                    <span class="material-symbols-outlined text-[16px]">mark_email_read</span>
+                    Code sent to <span class="font-bold underline">{{ Auth::user()->email }}</span> (valid for 15m)
+                </div>
+
+                <div x-show="otpError" class="p-3 rounded-lg bg-error/10 border border-error/30 mb-4 flex items-center gap-2 text-xs font-mono-data text-error" x-text="otpError"></div>
+
+                {{-- OTP Verification Form --}}
+                <form :action="'/service-requests/' + activeRequestId + '/complete'" method="POST">
+                    @csrf
+                    <div class="mb-5">
+                        <label for="otp_input" class="stitch-label text-[11px] text-center block mb-2">
+                            ENTER 6-DIGIT AUTHORIZATION CODE *
+                        </label>
+                        <input id="otp_input"
+                               type="text"
+                               name="otp"
+                               x-model="otpCode"
+                               required
+                               maxlength="6"
+                               pattern="[0-9]{6}"
+                               autocomplete="one-time-code"
+                               inputmode="numeric"
+                               placeholder="••••••"
+                               class="stitch-input text-center text-2xl tracking-[0.5em] font-mono-data font-bold text-secondary bg-surface-container-highest/80 border-secondary/30 focus:border-secondary focus:ring-secondary py-3">
+                        <p class="font-mono-data text-[10px] text-on-surface-variant/70 text-center mt-2">
+                            Releasing escrow balance transfers credits immediately to the skill provider.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-white/10">
+                        <button type="button"
+                                @click="sendOtp()"
+                                :disabled="otpSending"
+                                class="text-xs font-mono-data text-secondary hover:text-secondary-fixed flex items-center gap-1 disabled:opacity-50">
+                            <span class="material-symbols-outlined text-[14px]">refresh</span>
+                            Resend Code
+                        </button>
+
+                        <div class="flex gap-2">
+                            <button type="button" @click="otpModal = false" class="btn-stitch-secondary text-xs py-1.5 px-3">
+                                CANCEL
+                            </button>
+                            <button type="submit"
+                                    :disabled="otpCode.length !== 6"
+                                    class="btn-stitch-primary text-xs py-1.5 px-4 shadow-[0_0_12px_rgba(93,230,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
+                                VERIFY & COMPLETE
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

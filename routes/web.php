@@ -19,6 +19,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestCompletionController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\ServiceRequestDisputeResolutionController;
+use App\Http\Controllers\ServiceRequestOtpController;
 use App\Http\Controllers\ServiceRequestReviewController;
 use App\Http\Controllers\StartServiceRequestController;
 use App\Http\Controllers\StoreServiceRequestController;
@@ -96,6 +97,8 @@ Route::middleware('auth')->group(function () {
         ->name('service-requests.dispute');
     Route::post('/service-requests/{service_request}/resolve-dispute', ServiceRequestDisputeResolutionController::class)
         ->name('service-requests.resolve-dispute');
+    Route::post('/service-requests/{service_request}/send-otp', [ServiceRequestOtpController::class, 'send'])
+        ->name('service-requests.send-otp');
     Route::post('/service-requests/{service_request}/complete', ServiceRequestCompletionController::class)
         ->name('service-requests.complete');
     Route::post('/service-requests/{service_request}/reviews', ServiceRequestReviewController::class)

@@ -19,6 +19,16 @@ class CompleteServiceRequestRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'otp' => ['required', 'string', 'digits:6'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'otp.required' => 'Please enter the 6-digit confirmation OTP.',
+            'otp.digits' => 'The confirmation OTP must be exactly 6 numeric digits.',
+        ];
     }
 }
