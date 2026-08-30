@@ -32,18 +32,36 @@
                 </div>
 
                 {{-- Category --}}
-                <div class="mb-6">
+                <div class="mb-6" x-data="{ selectedCategory: '{{ old('category_id', '') }}' }">
                     <label for="category_id" class="stitch-label">CATEGORY *</label>
-                    @php $categories = \App\Models\Category::where('is_active', true)->get(); @endphp
-                    <select id="category_id" name="category_id" required class="stitch-select @error('category_id') border-error/50 @enderror">
+                    @php $categories = \App\Models\Category::where('is_active', true)->orderBy('name')->get(); @endphp
+                    <select id="category_id" name="category_id" x-model="selectedCategory" required class="stitch-select @error('category_id') border-error/50 @enderror @error('custom_category') border-error/50 @enderror">
                         <option value="">Select an initiative sector...</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
                                 {{ $cat->name }}
                             </option>
                         @endforeach
+                        <option value="custom" {{ old('category_id') === 'custom' ? 'selected' : '' }}>
+                            ✨ Other / Custom Category...
+                        </option>
                     </select>
                     <x-input-error :messages="$errors->get('category_id')" class="mt-1 text-xs text-error font-mono-data" />
+
+                    {{-- Custom Category Input (shown when 'custom' is selected) --}}
+                    <div x-show="selectedCategory === 'custom'" x-cloak class="mt-3 space-y-1.5 animate-fade-in-up">
+                        <label for="custom_category" class="stitch-label text-[11px] text-secondary flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[14px]">edit</span>
+                            ENTER CUSTOM CATEGORY NAME *
+                        </label>
+                        <input id="custom_category" type="text" name="custom_category" value="{{ old('custom_category') }}"
+                               maxlength="100"
+                               :required="selectedCategory === 'custom'"
+                               class="stitch-input @error('custom_category') border-error/50 @enderror"
+                               placeholder="e.g., Quantum Computing, Urban Permaculture, Biohacking">
+                        <p class="font-mono-data text-[10px] text-on-surface-variant/70">A new initiative category will be registered for your proposal.</p>
+                        <x-input-error :messages="$errors->get('custom_category')" class="mt-1 text-xs text-error font-mono-data" />
+                    </div>
                 </div>
 
                 {{-- Mission Statement --}}

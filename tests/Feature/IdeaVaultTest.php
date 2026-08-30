@@ -277,6 +277,136 @@ class IdeaVaultTest extends TestCase
         $this->assertSame('pending', $collaborator->fresh()->status);
     }
 
+    public function test_authenticated_user_can_create_idea_with_custom_category(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => 'Quantum Computing & Telemetry',
+            'title' => 'Quantum Mesh Network',
+            'mission_statement' => 'Establishing entangled communication relay nodes.',
+            'target_hours' => '50.00',
+            'required_skills' => ['quantum physics', 'networking'],
+            'status' => 'open',
+        ]);
+
+        $response->assertCreated();
+
+        $category = Category::where('name', 'Quantum Computing & Telemetry')->first();
+        $this->assertNotNull($category);
+        $this->assertSame('quantum-computing-telemetry', $category->slug);
+        $this->assertTrue($category->is_active);
+
+        $idea = Idea::where('title', 'Quantum Mesh Network')->first();
+        $this->assertNotNull($idea);
+        $this->assertSame($category->id, $idea->category_id);
+        $this->assertSame($user->id, $idea->user_id);
+    }
+
+    public function test_custom_category_appears_on_created_initiative_view(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => 'Biohacking & Genetics',
+            'title' => 'Open CRISPR Lab',
+            'mission_statement' => 'Democratizing genetic research in community maker spaces.',
+            'target_hours' => '80.00',
+        ]);
+
+        $idea = Idea::where('title', 'Open CRISPR Lab')->firstOrFail();
+        $this->assertSame('Biohacking & Genetics', $idea->category->name);
+
+        $viewResponse = $this->actingAs($user)->get(route('ideas.show', $idea));
+        $viewResponse->assertOk();
+        $viewResponse->assertSee('Biohacking & Genetics');
+        $viewResponse->assertSee('Open CRISPR Lab');
+    }
+
+    public function test_custom_category_reuses_existing_category_case_insensitively(): void
+    {
+        $user = User::factory()->create();
+        $existing = $this->activeCategory('Artificial Intelligence', 'artificial-intelligence');
+
+        $response = $this->actingAs($user)->postJson(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => 'artificial intelligence',
+            'title' => 'Autonomous Drone Fleet',
+            'mission_statement' => 'Deploying autonomous drones for search and rescue.',
+            'target_hours' => '35.00',
+        ]);
+
+        $response->assertCreated();
+
+        // Ensure no duplicate category was created
+        $this->assertSame(1, Category::whereRaw('LOWER(name) = ?', ['artificial intelligence'])->count());
+
+        $idea = Idea::where('title', 'Autonomous Drone Fleet')->firstOrFail();
+        $this->assertSame($existing->id, $idea->category_id);
+    }
+
+    public function test_empty_custom_category_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => '',
+            'title' => 'Empty Custom Category Test',
+            'mission_statement' => 'This should fail validation.',
+            'target_hours' => '10.00',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['custom_category']);
+    }
+
+    public function test_oversized_custom_category_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => str_repeat('A', 101),
+            'title' => 'Oversized Category Test',
+            'mission_statement' => 'This should fail validation.',
+            'target_hours' => '10.00',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['custom_category']);
+    }
+
+    public function test_invalid_category_id_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ideas.store'), [
+            'category_id' => 99999,
+            'title' => 'Invalid Category ID Test',
+            'mission_statement' => 'This should fail validation.',
+            'target_hours' => '10.00',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['category_id']);
+    }
+
+    public function test_unauthenticated_user_cannot_create_idea_with_custom_category(): void
+    {
+        $response = $this->postJson(route('ideas.store'), [
+            'category_id' => 'custom',
+            'custom_category' => 'Robotics',
+            'title' => 'Guest Initiative',
+            'mission_statement' => 'Should be unauthorized.',
+            'target_hours' => '10.00',
+        ]);
+
+        $response->assertUnauthorized();
+    }
+
     private function activeCategory(string $name, string $slug): Category
     {
         return Category::query()->create([
