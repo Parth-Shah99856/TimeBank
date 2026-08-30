@@ -19,6 +19,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceRequestCompletionController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\ServiceRequestDisputeResolutionController;
+use App\Http\Controllers\ServiceRequestMessageController;
 use App\Http\Controllers\ServiceRequestOtpController;
 use App\Http\Controllers\ServiceRequestReviewController;
 use App\Http\Controllers\StartServiceRequestController;
@@ -103,6 +104,10 @@ Route::middleware('auth')->group(function () {
         ->name('service-requests.complete');
     Route::post('/service-requests/{service_request}/reviews', ServiceRequestReviewController::class)
         ->name('service-requests.reviews.store');
+    Route::get('/service-requests/{service_request}/chat', [ServiceRequestMessageController::class, 'index'])
+        ->name('service-requests.chat');
+    Route::post('/service-requests/{service_request}/messages', [ServiceRequestMessageController::class, 'store'])
+        ->name('service-requests.messages.store');
 
     // Services CRUD
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');

@@ -108,6 +108,19 @@
 
                         {{-- Actions depending on status --}}
                         <div class="flex items-center gap-2">
+                            <a href="{{ route('service-requests.chat', $req->id) }}"
+                               class="btn-stitch-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 hover:border-secondary/40 transition-colors"
+                               title="Open Transmission Channel">
+                                <span class="material-symbols-outlined text-[15px]">chat</span>
+                                <span>Chat</span>
+                                @php $unreadCount = $req->unreadMessagesCountFor(Auth::user()); @endphp
+                                @if($unreadCount > 0)
+                                    <span class="px-1.5 py-0.2 rounded-full bg-secondary text-surface font-mono text-[9px] font-bold">
+                                        {{ $unreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+
                             @if($req->status === 'pending')
                                 <form method="POST" action="{{ route('service-requests.cancel', $req->id) }}" onsubmit="return confirm('Cancel this pending service proposal?')">
                                     @csrf
@@ -193,6 +206,19 @@
 
                         {{-- Provider Actions --}}
                         <div class="flex items-center gap-2">
+                            <a href="{{ route('service-requests.chat', $req->id) }}"
+                               class="btn-stitch-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 hover:border-secondary/40 transition-colors"
+                               title="Open Transmission Channel">
+                                <span class="material-symbols-outlined text-[15px]">chat</span>
+                                <span>Chat</span>
+                                @php $unreadCount = $req->unreadMessagesCountFor(Auth::user()); @endphp
+                                @if($unreadCount > 0)
+                                    <span class="px-1.5 py-0.2 rounded-full bg-secondary text-surface font-mono text-[9px] font-bold">
+                                        {{ $unreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+
                             @if($req->status === 'pending')
                                 <form method="POST" action="{{ route('service-requests.accept', $req->id) }}">
                                     @csrf

@@ -67,4 +67,17 @@ class ServiceRequest extends Model
     {
         return $this->hasMany(ServiceRequestOtp::class);
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ServiceRequestMessage::class);
+    }
+
+    public function unreadMessagesCountFor(User $user): int
+    {
+        return $this->messages()
+            ->where('sender_id', '!=', $user->id)
+            ->whereNull('read_at')
+            ->count();
+    }
 }
