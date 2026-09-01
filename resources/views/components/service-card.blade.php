@@ -7,10 +7,10 @@
     <div>
         {{-- Header: Provider & Badges --}}
         <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
+            <a href="{{ route('users.show', $service->user->id) }}" class="flex items-center gap-3 group/provider">
                 <x-avatar :user="$service->user" size="md" />
                 <div>
-                    <h4 class="font-headline text-sm font-semibold text-on-surface group-hover:text-secondary transition-colors">{{ $service->user->name ?? 'Architect' }}</h4>
+                    <h4 class="font-headline text-sm font-semibold text-on-surface group-hover:text-secondary group-hover/provider:text-secondary transition-colors">{{ $service->user->name ?? 'Architect' }}</h4>
                     @php
                         $providerRating = $service->user ? (float)$service->user->reviewsReceived()->avg('rating') : 0;
                     @endphp
@@ -23,7 +23,7 @@
                         <span class="font-mono-data text-[10px] text-on-surface-variant/60 block mt-0.5">New Architect</span>
                     @endif
                 </div>
-            </div>
+            </a>
 
             <x-badge :variant="'cyan'">
                 {{ $service->category->name ?? 'Skill' }}

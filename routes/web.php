@@ -25,6 +25,7 @@ use App\Http\Controllers\ServiceRequestReviewController;
 use App\Http\Controllers\StartServiceRequestController;
 use App\Http\Controllers\StoreServiceRequestController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +68,9 @@ Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('ideas.show')
 Route::get('/leaderboard', function () {
     return view('leaderboard');
 })->name('leaderboard');
+
+// Public User Profiles
+Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {

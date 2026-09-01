@@ -53,11 +53,12 @@
             </div>
 
             {{-- Provider Card --}}
-            <div class="glass-card p-6 rounded-2xl flex items-center justify-between">
-                <div class="flex items-center gap-4">
+            <div class="glass-card p-6 rounded-2xl">
+                <a href="{{ route('users.show', $service->user->id) }}"
+                   class="flex items-center gap-4 group">
                     <x-avatar :user="$service->user" size="lg" />
                     <div>
-                        <h3 class="font-headline-md text-base md:text-lg font-bold text-on-surface">
+                        <h3 class="font-headline-md text-base md:text-lg font-bold text-on-surface group-hover:text-secondary transition-colors">
                             {{ $service->user->name }}
                         </h3>
                         <p class="font-mono-data text-xs text-on-surface-variant mt-0.5">
@@ -71,7 +72,10 @@
                             </div>
                         @endif
                     </div>
-                </div>
+                    <span class="ml-auto material-symbols-outlined text-[18px] text-secondary/50 group-hover:text-secondary group-hover:translate-x-1 transition-all duration-200">
+                        arrow_forward
+                    </span>
+                </a>
             </div>
 
             {{-- Reviews Section --}}

@@ -54,7 +54,7 @@
 
                     <div class="flex-grow min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="font-headline-md text-base md:text-lg font-bold text-on-surface truncate">{{ $u->name }}</h3>
+                            <a href="{{ route('users.show', $u->id) }}" class="font-headline-md text-base md:text-lg font-bold text-on-surface hover:text-tertiary transition-colors truncate">{{ $u->name }}</a>
                             <span class="px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary font-label-caps text-[9px] font-bold">LEAD ARCHITECT</span>
                         </div>
                         <p class="font-body-md text-xs text-on-surface-variant truncate">{{ $u->headline ?? 'Verified Temporal Contributor' }}</p>
@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="flex-grow min-w-0">
-                        <h3 class="font-headline-md text-base md:text-lg font-bold text-on-surface truncate">{{ $u->name }}</h3>
+                        <a href="{{ route('users.show', $u->id) }}" class="font-headline-md text-base md:text-lg font-bold text-on-surface hover:text-secondary transition-colors block truncate">{{ $u->name }}</a>
                         <p class="font-body-md text-xs text-on-surface-variant truncate">{{ $u->headline ?? 'Temporal Architect' }}</p>
                     </div>
 
@@ -114,7 +114,7 @@
                     </div>
 
                     <div class="flex-grow min-w-0">
-                        <h3 class="font-headline-md text-base md:text-lg font-bold text-on-surface truncate">{{ $u->name }}</h3>
+                        <a href="{{ route('users.show', $u->id) }}" class="font-headline-md text-base md:text-lg font-bold text-on-surface hover:text-secondary transition-colors block truncate">{{ $u->name }}</a>
                         <p class="font-body-md text-xs text-on-surface-variant truncate">{{ $u->headline ?? 'Active Contributor' }}</p>
                     </div>
 
@@ -137,7 +137,7 @@
                         {{ strtoupper(substr($u->name, 0, 2)) }}
                     </div>
                     <div class="flex-grow min-w-0">
-                        <h4 class="font-headline text-sm font-semibold text-on-surface truncate">{{ $u->name }}</h4>
+                        <a href="{{ route('users.show', $u->id) }}" class="font-headline text-sm font-semibold text-on-surface hover:text-secondary transition-colors block truncate">{{ $u->name }}</a>
                         <p class="font-body-md text-xs text-on-surface-variant truncate">{{ $u->headline ?? 'Network Member' }}</p>
                     </div>
                     <div class="text-right font-mono-data text-xs text-secondary font-bold flex-shrink-0">
