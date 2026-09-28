@@ -55,6 +55,11 @@ class DemoDataSeeder extends Seeder
     {
         $this->command->info('Starting DemoDataSeeder — safe idempotent run');
 
+        $this->call([
+            CategorySeeder::class,
+            UserSeeder::class,
+        ]);
+
         DB::transaction(function () {
             // ----------------------------------------------------------------
             // 1. ADDITIONAL USERS (4)
