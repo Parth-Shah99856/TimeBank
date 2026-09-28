@@ -20,7 +20,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['service_request_id', 'created_at']);
-            $table->index(['service_request_id', 'sender_id', 'read_at']);
+            $table->index(
+                ['service_request_id', 'sender_id', 'read_at'],
+                'srm_req_sender_read_idx'
+            );
         });
     }
 
