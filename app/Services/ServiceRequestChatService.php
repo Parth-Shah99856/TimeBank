@@ -64,7 +64,7 @@ class ServiceRequestChatService
      *
      * @throws AuthorizationException
      */
-    public function getMessages(ServiceRequest $serviceRequest, User $user): Collection
+    public function getMessages(ServiceRequest $serviceRequest, User $user, ?int $afterId = null): Collection
     {
         if ($user->id !== $serviceRequest->requester_id && $user->id !== $serviceRequest->provider_id) {
             throw new AuthorizationException('You are not authorized to view messages for this exchange.');
@@ -72,7 +72,9 @@ class ServiceRequestChatService
 
         return $serviceRequest->messages()
             ->with('sender')
+            ->when($afterId !== null, fn ($query) => $query->where('id', '>', $afterId))
             ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'asc')
             ->get();
     }
 }

@@ -15,6 +15,10 @@
              ])),
              newMessage: '',
              isSending: false,
+             isPolling: false,
+             pollIntervalMs: 2500,
+             pollTimer: null,
+             lastMessageId: {{ $messages->max('id') ?? 0 }},
              scrollToBottom() {
                  this.$nextTick(() => {
                      const el = document.getElementById('chat-messages-container');
@@ -22,7 +26,107 @@
                  });
              },
              init() {
+                 if (this.messages.length > 0) {
+                     const maxId = Math.max(...this.messages.map(m => m.id));
+                     this.lastMessageId = Math.max(this.lastMessageId, maxId);
+                 }
                  this.scrollToBottom();
+                 this.startPolling(2500);
+
+                 const onVisibilityChange = () => {
+                     if (document.hidden) {
+                         // Backgrounded: throttle down to 10s to conserve system resources
+                         this.startPolling(10000);
+                     } else {
+                         // Active foreground: immediate check and restore 2.5s cadence
+                         this.pollNewMessages();
+                         this.startPolling(2500);
+                     }
+                 };
+
+                 const onUnload = () => this.stopPolling();
+
+                 document.addEventListener('visibilitychange', onVisibilityChange);
+                 window.addEventListener('beforeunload', onUnload);
+                 window.addEventListener('pagehide', onUnload);
+             },
+             destroy() {
+                 this.stopPolling();
+             },
+             startPolling(intervalMs = 2500) {
+                 this.stopPolling();
+                 this.pollIntervalMs = intervalMs;
+                 this.pollTimer = setInterval(() => {
+                     this.pollNewMessages();
+                 }, this.pollIntervalMs);
+             },
+             stopPolling() {
+                 if (this.pollTimer) {
+                     clearInterval(this.pollTimer);
+                     this.pollTimer = null;
+                 }
+             },
+             async pollNewMessages() {
+                 if (this.isPolling) return;
+                 this.isPolling = true;
+
+                 try {
+                     const url = '{{ route('service-requests.chat', $serviceRequest) }}?after_id=' + this.lastMessageId;
+                     const response = await fetch(url, {
+                         method: 'GET',
+                         headers: {
+                             'Accept': 'application/json',
+                             'X-Requested-With': 'XMLHttpRequest'
+                         }
+                     });
+
+                     if (response && response.ok) {
+                         const data = await response.json();
+
+                         // Synchronize read receipts on our own messages if read by partner
+                         if (data.last_read_id) {
+                             this.messages.forEach(m => {
+                                 if (m.is_me && m.id <= data.last_read_id) {
+                                     m.is_read = true;
+                                 }
+                             });
+                         }
+
+                         // Append newly arrived messages
+                         if (Array.isArray(data.messages) && data.messages.length > 0) {
+                             const el = document.getElementById('chat-messages-container');
+                             const wasNearBottom = el
+                                 ? (el.scrollHeight - el.scrollTop - el.clientHeight < 120)
+                                 : true;
+
+                             let hasNew = false;
+                             data.messages.forEach(msg => {
+                                 if (!this.messages.some(m => m.id === msg.id)) {
+                                     this.messages.push({
+                                         id: msg.id,
+                                         sender_id: msg.sender_id,
+                                         sender_name: msg.sender_name,
+                                         sender_avatar: msg.sender_avatar,
+                                         content: msg.content,
+                                         created_at: msg.created_at,
+                                         is_me: msg.is_me,
+                                         is_read: msg.is_read
+                                     });
+                                     this.lastMessageId = Math.max(this.lastMessageId, msg.id);
+                                     hasNew = true;
+                                 }
+                             });
+
+                             if (hasNew && wasNearBottom) {
+                                 this.scrollToBottom();
+                             }
+                         }
+                     }
+                 } catch (e) {
+                     // Silently tolerate background polling interruptions without disrupting chat UI
+                 } finally {
+                     this.isPolling = false;
+                 }
              },
              async sendMessage() {
                  const text = this.newMessage.trim();
@@ -36,14 +140,15 @@
                          headers: {
                              'Content-Type': 'application/json',
                              'Accept': 'application/json',
-                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                             'X-Requested-With': 'XMLHttpRequest'
                          },
                          body: JSON.stringify({ content: text })
                      });
 
                      if (response.ok) {
                          const data = await response.json();
-                         this.messages.push({
+                         const newMsg = {
                              id: data.id,
                              sender_id: data.sender_id,
                              sender_name: data.sender ? data.sender.name : '{{ Auth::user()->name }}',
@@ -52,18 +157,26 @@
                              created_at: 'Just now',
                              is_me: true,
                              is_read: false
-                         });
+                         };
+                         if (!this.messages.some(m => m.id === newMsg.id)) {
+                             this.messages.push(newMsg);
+                         }
+                         this.lastMessageId = Math.max(this.lastMessageId, data.id);
                          this.newMessage = '';
                          this.scrollToBottom();
                      } else {
-                         const err = await response.json();
+                         const err = await response.json().catch(() => ({}));
                          alert(err.message || 'Failed to transmit message.');
                      }
                  } catch (e) {
                      alert('Network communication error.');
                  } finally {
                      this.isSending = false;
-                     this.$nextTick(() => this.$refs.msgInput.focus());
+                     this.$nextTick(() => {
+                         if (this.$refs.msgInput) {
+                             this.$refs.msgInput.focus();
+                         }
+                     });
                  }
              }
          }">
@@ -84,6 +197,10 @@
                             <h2 class="font-headline text-base font-bold text-on-surface">{{ $partner->name }}</h2>
                             <span class="font-mono-data text-[10px] px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30">
                                 {{ Auth::id() === $serviceRequest->requester_id ? 'Provider' : 'Requester' }}
+                            </span>
+                            <span class="inline-flex items-center gap-1 font-mono-data text-[10px] text-secondary/80">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                                LIVE
                             </span>
                         </div>
                         <p class="font-mono-data text-xs text-on-surface-variant truncate max-w-xs md:max-w-md">

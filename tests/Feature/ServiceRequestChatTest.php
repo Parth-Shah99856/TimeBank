@@ -222,6 +222,153 @@ class ServiceRequestChatTest extends TestCase
         $this->assertSame('6.00', $provider->fresh()->time_balance);
     }
 
+    public function test_incremental_retrieval_returns_only_messages_after_specified_id(): void
+    {
+        [$serviceRequest, $requester, $provider] = $this->createServiceRequest();
+        $chatService = app(ServiceRequestChatService::class);
+
+        $msg1 = $chatService->sendMessage($serviceRequest, $requester, 'Alpha message');
+        $msg2 = $chatService->sendMessage($serviceRequest, $provider, 'Beta response');
+        $msg3 = $chatService->sendMessage($serviceRequest, $requester, 'Gamma followup');
+
+        // Poll with after_id set to msg1->id => should return only msg2 and msg3
+        $pollResponse = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msg1->id])
+        );
+
+        $pollResponse->assertOk();
+        $messages = $pollResponse->json('messages');
+        $this->assertCount(2, $messages);
+        $this->assertSame($msg2->id, $messages[0]['id']);
+        $this->assertSame('Beta response', $messages[0]['content']);
+        $this->assertSame($msg3->id, $messages[1]['id']);
+        $this->assertSame('Gamma followup', $messages[1]['content']);
+
+        // Poll with after_id set to msg3->id => should return empty messages array
+        $emptyPoll = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msg3->id])
+        );
+
+        $emptyPoll->assertOk();
+        $this->assertEmpty($emptyPoll->json('messages'));
+    }
+
+    public function test_polling_endpoint_strictly_rejects_unauthorized_user(): void
+    {
+        [$serviceRequest, $requester] = $this->createServiceRequest();
+        $outsider = User::factory()->create(['name' => 'Eve Outsider']);
+
+        $pollResponse = $this->actingAs($outsider)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => 0])
+        );
+
+        $pollResponse->assertForbidden();
+    }
+
+    public function test_polling_synchronizes_read_receipts_for_sender(): void
+    {
+        [$serviceRequest, $requester, $provider] = $this->createServiceRequest();
+        $chatService = app(ServiceRequestChatService::class);
+
+        // Requester sends a message
+        $msg = $chatService->sendMessage($serviceRequest, $requester, 'Important project milestone reached');
+        $this->assertNull($msg->read_at);
+
+        // Provider polls chat (this automatically marks incoming messages as read)
+        $providerPoll = $this->actingAs($provider)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => 0])
+        );
+        $providerPoll->assertOk();
+
+        $msg->refresh();
+        $this->assertNotNull($msg->read_at);
+
+        // Requester polls again with after_id set to their message id
+        $requesterPoll = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msg->id])
+        );
+        $requesterPoll->assertOk();
+        $this->assertSame($msg->id, $requesterPoll->json('last_read_id'));
+    }
+
+    public function test_two_user_simulated_live_chat_exchange_flow(): void
+    {
+        [$serviceRequest, $requester, $provider] = $this->createServiceRequest();
+
+        // Step 1: Requester sends a message
+        $sendResponse1 = $this->actingAs($requester)->postJson(route('service-requests.messages.store', $serviceRequest), [
+            'content' => 'Hello provider, initiating live channel exchange.',
+        ]);
+        $sendResponse1->assertCreated();
+        $msgId1 = $sendResponse1->json('id');
+
+        // Step 2: Provider background polls with after_id = 0 (no page refresh)
+        $providerPoll1 = $this->actingAs($provider)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => 0])
+        );
+        $providerPoll1->assertOk();
+        $messagesReceivedByProvider = $providerPoll1->json('messages');
+        $this->assertCount(1, $messagesReceivedByProvider);
+        $this->assertSame($msgId1, $messagesReceivedByProvider[0]['id']);
+        $this->assertFalse($messagesReceivedByProvider[0]['is_me']);
+        $this->assertSame($requester->name, $messagesReceivedByProvider[0]['sender_name']);
+
+        // Step 3: Provider replies
+        $sendResponse2 = $this->actingAs($provider)->postJson(route('service-requests.messages.store', $serviceRequest), [
+            'content' => 'Transmission received loud and clear.',
+        ]);
+        $sendResponse2->assertCreated();
+        $msgId2 = $sendResponse2->json('id');
+
+        // Step 4: Requester background polls with after_id = msgId1 (no page refresh)
+        $requesterPoll1 = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msgId1])
+        );
+        $requesterPoll1->assertOk();
+        $messagesReceivedByRequester = $requesterPoll1->json('messages');
+        $this->assertCount(1, $messagesReceivedByRequester);
+        $this->assertSame($msgId2, $messagesReceivedByRequester[0]['id']);
+        $this->assertFalse($messagesReceivedByRequester[0]['is_me']);
+        $this->assertSame('Transmission received loud and clear.', $messagesReceivedByRequester[0]['content']);
+        $this->assertSame($provider->name, $messagesReceivedByRequester[0]['sender_name']);
+
+        // Step 5: Both users poll again with their latest IDs => both receive empty arrays (no duplicate payload)
+        $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msgId2])
+        )->assertOk()->assertExactJson([
+            'service_request_id' => $serviceRequest->id,
+            'messages' => [],
+            'last_read_id' => $msgId1,
+        ]);
+
+        $this->actingAs($provider)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => $msgId2])
+        )->assertOk()->assertExactJson([
+            'service_request_id' => $serviceRequest->id,
+            'messages' => [],
+            'last_read_id' => $msgId2,
+        ]);
+    }
+
+    public function test_invalid_or_negative_after_id_falls_back_gracefully(): void
+    {
+        [$serviceRequest, $requester] = $this->createServiceRequest();
+        $chatService = app(ServiceRequestChatService::class);
+        $chatService->sendMessage($serviceRequest, $requester, 'Sample message');
+
+        $negativeResponse = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => -1])
+        );
+        $negativeResponse->assertOk();
+        $this->assertCount(1, $negativeResponse->json('messages'));
+
+        $stringResponse = $this->actingAs($requester)->getJson(
+            route('service-requests.chat', ['service_request' => $serviceRequest, 'after_id' => 'invalid_string'])
+        );
+        $stringResponse->assertOk();
+        $this->assertCount(1, $stringResponse->json('messages'));
+    }
+
     private function createServiceRequest(string $reqBalance = '8.00', string $provBalance = '2.00', string $credits = '4.00'): array
     {
         $requester = User::factory()->create(['name' => 'Alice Requester', 'time_balance' => $reqBalance]);
