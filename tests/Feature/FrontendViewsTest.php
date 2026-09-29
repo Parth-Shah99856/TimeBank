@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Idea;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\ServiceRequest;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -138,6 +140,60 @@ class FrontendViewsTest extends TestCase
         $response = $this->get('/leaderboard');
         $response->assertOk();
         $response->assertSee('Community Leaderboard');
+        // "All Architects" must be a real anchor link, not a dead button
+        $response->assertSee('view=all', false);
+        $response->assertSee('All Architects', false);
+    }
+
+    public function test_leaderboard_all_architects_view_renders(): void
+    {
+        $category  = Category::query()->create([
+            'name'      => 'All-View Cat',
+            'slug'      => 'all-view-cat',
+            'is_active' => true,
+        ]);
+        $provider  = User::factory()->create(['name' => 'All-View Provider']);
+        $requester = User::factory()->create();
+        $service   = Service::query()->create([
+            'user_id'     => $provider->id,
+            'category_id' => $category->id,
+            'title'       => 'All-View Service',
+            'description' => 'Service for leaderboard test.',
+            'hourly_rate' => '2.00',
+            'tags'        => [],
+            'is_active'   => true,
+        ]);
+        $sr = ServiceRequest::query()->create([
+            'service_id'      => $service->id,
+            'provider_id'     => $provider->id,
+            'requester_id'    => $requester->id,
+            'category_id'     => $category->id,
+            'title'           => 'All-View Exchange',
+            'project_scope'   => 'Scope.',
+            'estimated_hours' => '1.00',
+            'total_credits'   => '2.00',
+            'status'          => 'completed',
+            'completed_at'    => now(),
+        ]);
+
+        // Exchange transaction so user appears ranked
+        Transaction::query()->create([
+            'transaction_code'   => 'TXN-ALL-VIEW-001',
+            'service_request_id' => $sr->id,
+            'from_user_id'       => $requester->id,
+            'to_user_id'         => $provider->id,
+            'type'               => Transaction::TYPE_SERVICE_EXCHANGE,
+            'amount'             => '2.00',
+            'description'        => 'Exchange payment',
+        ]);
+
+        $response = $this->get('/leaderboard?view=all');
+
+        $response->assertOk();
+        $response->assertSee('Community Leaderboard');
+        $response->assertSee('All-View Provider');
+        // Profile link must be present in the all-architects view
+        $response->assertSee(route('users.show', $provider->id), false);
     }
 
     public function test_authenticated_dashboard_renders(): void
