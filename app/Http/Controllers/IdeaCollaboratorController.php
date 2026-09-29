@@ -18,7 +18,15 @@ class IdeaCollaboratorController extends Controller
         Idea $idea,
         IdeaCollaboratorService $ideaCollaboratorService,
     ): JsonResponse|RedirectResponse {
-        $collaborator = $ideaCollaboratorService->apply($idea, $request->user(), $request->validated());
+        try {
+            $collaborator = $ideaCollaboratorService->apply($idea, $request->user(), $request->validated());
+        } catch (\RuntimeException $e) {
+            if ($request->expectsJson()) {
+                throw $e;
+            }
+
+            return back()->with('error', $e->getMessage());
+        }
 
         if ($request->expectsJson()) {
             return response()->json($collaborator, Response::HTTP_CREATED);
@@ -32,7 +40,15 @@ class IdeaCollaboratorController extends Controller
         IdeaCollaborator $ideaCollaborator,
         IdeaCollaboratorService $ideaCollaboratorService,
     ): JsonResponse|RedirectResponse {
-        $updatedCollaborator = $ideaCollaboratorService->updateStatus($ideaCollaborator, $request->validated('status'));
+        try {
+            $updatedCollaborator = $ideaCollaboratorService->updateStatus($ideaCollaborator, $request->validated('status'));
+        } catch (\Throwable $e) {
+            if ($request->expectsJson()) {
+                throw $e;
+            }
+
+            return back()->with('error', $e->getMessage());
+        }
 
         if ($request->expectsJson()) {
             return response()->json($updatedCollaborator);

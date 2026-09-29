@@ -24,4 +24,13 @@ class StoreIdeaCollaboratorRequest extends FormRequest
             'hours_pledged' => ['required', 'numeric', 'gt:0'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'hours_pledged.required' => 'Please specify the hours you pledge to contribute to this initiative.',
+            'hours_pledged.numeric' => 'Pledged hours must be a numerical value.',
+            'hours_pledged.gt' => 'Pledged hours must be greater than zero.',
+        ];
+    }
 }

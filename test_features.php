@@ -102,11 +102,11 @@ assertCheck($idea->status === 'recruiting', "Idea created with status 'recruitin
 
 // 3.2 Collaborator applies to idea
 $collabService = new IdeaCollaboratorService();
-$collab = $collabService->apply($idea, $collaborator, 'Frontend & UI Specialist');
+$collab = $collabService->apply($idea, $collaborator, ['role_offered' => 'Frontend & UI Specialist', 'hours_pledged' => '10.00']);
 assertCheck($collab->status === 'pending', "Collaborator applied (status: pending)");
 
 // 3.3 Owner accepts collaborator
-$collabService->accept($collab, $owner);
+$collabService->updateStatus($collab, 'accepted');
 $collab->refresh();
 assertCheck($collab->status === 'accepted', "Collaborator accepted by owner (status: accepted)");
 
@@ -137,7 +137,7 @@ $task = $taskService->createTask($project, [
     'description' => 'Create high fidelity wireframes and dashboard layout',
     'assigned_to' => $collaborator->id,
     'estimated_hours' => 5.00,
-    'status' => 'todo',
+    'status' => 'pending',
 ]);
 assertCheck($task->title === 'Design project dashboard', "Task created: '{$task->title}'");
 assertCheck((int)$task->assigned_to === (int)$collaborator->id, "Task assigned to Collaborator ({$collaborator->name})");
@@ -148,7 +148,7 @@ $task2 = $taskService->createTask($project, [
     'description' => 'Build initial controllers and migrations',
     'assigned_to' => $owner->id,
     'estimated_hours' => 5.00,
-    'status' => 'todo',
+    'status' => 'pending',
 ]);
 
 // 3.6 Update Task status to completed and verify progress

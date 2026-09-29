@@ -19,6 +19,10 @@
     font-variation-settings: 'FILL' 1;
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
 @layer base {
     html {
         scroll-behavior: smooth;

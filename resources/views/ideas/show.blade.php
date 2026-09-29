@@ -5,11 +5,12 @@
         $targetHours = (float)($idea->target_hours ?? 0);
         $hoursCommitted = (float)$idea->collaborators->where('status', 'accepted')->sum('hours_pledged');
         $isOwner = Auth::id() === $idea->user_id;
-        $hasApplied = Auth::check() ? $idea->collaborators->where('user_id', Auth::id())->isNotEmpty() : false;
+        $userCollab = Auth::check() ? $idea->collaborators->firstWhere('user_id', Auth::id()) : null;
+        $hasApplied = $userCollab !== null;
         $activeProject = $idea->projects->first();
     @endphp
 
-    <div class="max-w-4xl mx-auto space-y-8" x-data="{ applyModal: false }">
+    <div class="max-w-4xl mx-auto space-y-8" x-data="{ applyModal: {{ $errors->has('hours_pledged') || $errors->has('role_offered') ? 'true' : 'false' }} }">
         {{-- Back Link --}}
         <div>
             <a href="{{ route('ideas.index') }}" class="inline-flex items-center gap-1.5 font-label-caps text-xs text-on-surface-variant hover:text-secondary transition-colors">
@@ -50,12 +51,20 @@
                 @elseif(!$isOwner)
                     @auth
                         @if(!$hasApplied)
-                            <button @click="applyModal = true" class="btn-stitch-primary text-xs py-3.5 px-8 shadow-[0_0_16px_rgba(93,230,255,0.35)]">
+                            <button type="button" @click="applyModal = true" class="btn-stitch-primary text-xs py-3.5 px-8 shadow-[0_0_16px_rgba(93,230,255,0.35)]">
                                 <span class="material-symbols-outlined text-[18px]">handshake</span> JOIN AS COLLABORATOR
                             </button>
+                        @elseif($userCollab->status === 'accepted')
+                            <div class="inline-flex items-center gap-2 px-4 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 font-label-caps text-xs text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.2)]">
+                                <span class="material-symbols-outlined text-[16px]">verified</span> Active Collaborator ({{ number_format((float)$userCollab->hours_pledged, 0) }}h Pledged)
+                            </div>
+                        @elseif($userCollab->status === 'declined')
+                            <div class="inline-flex items-center gap-2 px-4 py-3 rounded-lg bg-error/10 border border-error/30 font-label-caps text-xs text-error">
+                                <span class="material-symbols-outlined text-[16px]">cancel</span> Application Declined
+                            </div>
                         @else
                             <div class="inline-flex items-center gap-2 px-4 py-3 rounded-lg bg-secondary/10 border border-secondary/30 font-label-caps text-xs text-secondary">
-                                <span class="material-symbols-outlined text-[16px]">check_circle</span> Application Submitted
+                                <span class="material-symbols-outlined text-[16px]">hourglass_top</span> Application Pending Review ({{ number_format((float)$userCollab->hours_pledged, 0) }}h)
                             </div>
                         @endif
                     @else
@@ -194,11 +203,14 @@
         </div>
 
         {{-- Collaborator Application Modal --}}
-        <div x-show="applyModal" class="stitch-overlay" style="display: none;" @click.self="applyModal = false">
+        <div x-show="applyModal" x-cloak class="stitch-overlay" @click.self="applyModal = false">
             <div class="stitch-modal animate-fade-in-up">
                 <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
-                    <h3 class="font-headline-md text-lg font-bold text-on-surface">Apply as Collaborator</h3>
-                    <button @click="applyModal = false" class="text-on-surface-variant hover:text-white">
+                    <div>
+                        <h3 class="font-headline-md text-lg font-bold text-on-surface">Apply as Collaborator</h3>
+                        <p class="font-body-md text-xs text-on-surface-variant mt-0.5">Join the team building {{ $idea->title }}</p>
+                    </div>
+                    <button type="button" @click="applyModal = false" class="text-on-surface-variant hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors">
                         <span class="material-symbols-outlined text-[20px]">close</span>
                     </button>
                 </div>
@@ -207,17 +219,24 @@
                     @csrf
                     <div class="mb-4">
                         <label for="role_offered" class="stitch-label">DESIRED ROLE / SPECIALIZATION</label>
-                        <input id="role_offered" type="text" name="role_offered" class="stitch-input" placeholder="e.g., Lead CAD Engineer, System Architect">
+                        <input id="role_offered" type="text" name="role_offered" value="{{ old('role_offered') }}" class="stitch-input @error('role_offered') border-error/50 focus:border-error @enderror" placeholder="e.g., Data Engineer, Python Developer, Designer">
+                        <x-input-error :messages="$errors->get('role_offered')" class="mt-1.5 text-xs text-error font-mono-data" />
                     </div>
 
                     <div class="mb-6">
-                        <label for="hours_pledged" class="stitch-label">HOURS PLEDGED (TIME BUDGET) *</label>
-                        <input id="hours_pledged" type="number" step="1" min="1" name="hours_pledged" value="10" required class="stitch-input" placeholder="10">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="hours_pledged" class="stitch-label !mb-0">HOURS PLEDGED (TIME BUDGET) *</label>
+                            <span class="font-mono-data text-[11px] text-on-surface-variant/70">Min. 1 hour</span>
+                        </div>
+                        <input id="hours_pledged" type="number" step="1" min="1" name="hours_pledged" value="{{ old('hours_pledged', 10) }}" required class="stitch-input @error('hours_pledged') border-error/50 focus:border-error @enderror" placeholder="10">
+                        <x-input-error :messages="$errors->get('hours_pledged')" class="mt-1.5 text-xs text-error font-mono-data" />
                     </div>
 
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 pt-2">
                         <button type="button" @click="applyModal = false" class="btn-stitch-secondary w-1/3 text-xs justify-center">CANCEL</button>
-                        <button type="submit" class="btn-stitch-primary w-2/3 text-xs justify-center shadow-[0_0_12px_rgba(93,230,255,0.3)]">SUBMIT APPLICATION</button>
+                        <button type="submit" class="btn-stitch-primary w-2/3 text-xs justify-center shadow-[0_0_12px_rgba(93,230,255,0.3)]">
+                            <span class="material-symbols-outlined text-[16px] mr-1">send</span> SUBMIT APPLICATION
+                        </button>
                     </div>
                 </form>
             </div>
