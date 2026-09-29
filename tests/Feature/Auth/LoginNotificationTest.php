@@ -123,4 +123,30 @@ class LoginNotificationTest extends TestCase
         $this->assertGuest();
         Notification::assertNothingSent();
     }
+
+    public function test_login_alert_notification_implements_should_queue(): void
+    {
+        $notification = new LoginAlertNotification();
+        $this->assertInstanceOf(\Illuminate\Contracts\Queue\ShouldQueue::class, $notification);
+    }
+
+    public function test_mail_or_notification_failure_does_not_break_login_or_cause_http_500(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'resilience-test@timebank.local',
+            'password' => 'password123',
+        ]);
+
+        Notification::shouldReceive('send')
+            ->andThrow(new \RuntimeException('Simulated SMTP transport connection failure'));
+
+        $response = $this->post('/login', [
+            'email' => 'resilience-test@timebank.local',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect(route('dashboard', absolute: false));
+        $this->followRedirects($response)->assertOk();
+    }
 }
