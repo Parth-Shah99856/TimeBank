@@ -114,4 +114,37 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Approved Demo / Test Accounts (Exempt from Email Verification)
+    |--------------------------------------------------------------------------
+    |
+    | Specific seeded demonstration and testing accounts permitted to operate
+    | without email verification. Wildcard domains are strictly disallowed.
+    |
+    */
+
+    'demo_emails' => array_values(array_filter(array_map('trim', explode(',', env('DEMO_EMAILS', 'admin@timebank.local,elena@timebank.local,marcus@timebank.local,sarah@timebank.local,alex@timebank.local,maya@timebank.local,daniel@timebank.local,sophia@timebank.local'))))),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email Verification Rollout Boundary (Legacy Compatibility Policy)
+    |--------------------------------------------------------------------------
+    |
+    | Timestamp marking when mandatory email verification was rolled out.
+    |
+    | Accounts created strictly before this boundary are treated as verified
+    | legacy users under application policy, preventing accidental lockout of
+    | legitimate pre-existing production accounts whose email_verified_at is NULL.
+    |
+    | Accounts created on or after this boundary must either be an official demo
+    | account or complete standard email verification (email_verified_at != null).
+    |
+    | Format: parseable date/time string, e.g. '2026-09-30 00:00:00 UTC'.
+    | Configurable via the EMAIL_VERIFICATION_ROLLOUT_AT environment variable.
+    |
+    */
+
+    'verification_rollout_at' => env('EMAIL_VERIFICATION_ROLLOUT_AT', '2026-09-30 00:00:00 UTC'),
+
 ];

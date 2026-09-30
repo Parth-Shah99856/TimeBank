@@ -3,8 +3,12 @@
 use App\Http\Controllers\AcceptServiceRequestController;
 use App\Http\Controllers\AdminAdjustmentController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminFullDashboardController;
+use App\Http\Controllers\AdminMaintenanceController;
+use App\Http\Controllers\AdminServiceManagementController;
 use App\Http\Controllers\AdminServiceRequestController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminUserManagementController;
 use App\Http\Controllers\CancelServiceRequestController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DisputeServiceRequestController;
@@ -140,18 +144,51 @@ Route::middleware('auth')->group(function () {
     Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 
-    // Admin Platform Control & Adjustments
-    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.index');
-    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::get('/admin/service-requests', [AdminServiceRequestController::class, 'index'])->name('admin.service-requests.index');
+    // ──────────────────────────────────────────────────────────────────────
+    // Admin Platform Control — requires auth + admin role
+    // ──────────────────────────────────────────────────────────────────────
+    Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('/admin/categories', function (Request $request) {
-        abort_unless($request->user()?->isAdmin(), 403);
+        // Primary admin dashboard — admin.index route name preserved for all existing links
+        Route::get('/', [AdminFullDashboardController::class, 'index'])->name('index');
 
-        return view('admin.categories.index');
-    })->name('admin.categories.index');
+        // Legacy dispute-resolution view — now accessible at /admin/moderation
+        Route::get('/moderation', [AdminDashboardController::class, 'index'])->name('moderation');
 
-    Route::post('/admin/adjustments', [AdminAdjustmentController::class, 'store'])->name('admin.adjustments.store');
+        // New full admin dashboard alias
+        Route::get('/dashboard', [AdminFullDashboardController::class, 'index'])->name('dashboard');
+
+        // User Management
+        Route::get('/users', [AdminUserManagementController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserManagementController::class, 'show'])->name('users.show');
+        Route::get('/users/{user}/delete', [AdminUserManagementController::class, 'confirmDelete'])->name('users.delete');
+        Route::delete('/users/{user}', [AdminUserManagementController::class, 'destroy'])->name('users.destroy');
+
+        // Service Management
+        Route::get('/services', [AdminServiceManagementController::class, 'index'])->name('services.index');
+        Route::get('/services/{service}', [AdminServiceManagementController::class, 'show'])->name('services.show');
+        Route::get('/services/{service}/delete', [AdminServiceManagementController::class, 'confirmDelete'])->name('services.delete');
+        Route::delete('/services/{service}', [AdminServiceManagementController::class, 'destroy'])->name('services.destroy');
+
+        // Service Requests (existing endpoint — now in admin group)
+        Route::get('/service-requests', [AdminServiceRequestController::class, 'index'])->name('service-requests.index');
+
+        // Categories (existing endpoint — now in admin group)
+        Route::get('/categories', function (Request $request) {
+            return view('admin.categories.index');
+        })->name('categories.index');
+
+        // Time-Credit Adjustments (existing endpoint — now in admin group)
+        Route::post('/adjustments', [AdminAdjustmentController::class, 'store'])->name('adjustments.store');
+
+        // API: list all users (existing JSON endpoint — now in admin group)
+        Route::get('/api/users', [AdminUserController::class, 'index'])->name('api.users');
+
+        // Maintenance
+        Route::get('/maintenance', [AdminMaintenanceController::class, 'index'])->name('maintenance');
+    });
+
+    // Category Management (non-admin can't create/update/delete — controller handles auth)
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');

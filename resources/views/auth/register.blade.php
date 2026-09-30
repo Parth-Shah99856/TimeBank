@@ -41,6 +41,10 @@
                        class="stitch-input pl-10 @error('email') border-error/50 focus:border-error @enderror"
                        placeholder="jane@network.link">
             </div>
+            <p class="font-mono-data text-[10px] text-secondary/80 mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">info</span>
+                Please verify your email address to activate your account.
+            </p>
             <x-input-error :messages="$errors->get('email')" class="mt-1 text-xs text-error font-mono-data" />
         </div>
 

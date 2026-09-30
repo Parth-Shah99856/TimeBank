@@ -12,10 +12,17 @@ class RegisterUserService
     public function register(array $attributes): User
     {
         return DB::transaction(function () use ($attributes): User {
+            $isDemo = in_array(
+                strtolower($attributes['email']),
+                array_map('strtolower', config('auth.demo_emails', [])),
+                true
+            );
+
             $user = User::create([
                 'name' => $attributes['name'],
                 'email' => $attributes['email'],
                 'password' => $attributes['password'],
+                'email_verified_at' => $isDemo ? now() : null,
             ]);
 
             Transaction::create([
