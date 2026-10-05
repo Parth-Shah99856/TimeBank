@@ -13,7 +13,7 @@
         </p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" x-data="{ loading: false, showKey: false }" @submit="loading = true">
+    <form method="POST" action="{{ route('register') }}" x-data="{ loading: false, showKey: false }" @submit="if (loading) { $event.preventDefault(); return; } loading = true;">
         @csrf
 
         {{-- Legal Name --}}
